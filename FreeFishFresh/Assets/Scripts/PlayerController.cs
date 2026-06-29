@@ -24,8 +24,6 @@ public class PlayerController : MonoBehaviour
     public float sideLift;
 
 
-    public CinemachineCamera glideCam;
-
 
     public Vector3 sideLiftDirection;
 
@@ -68,18 +66,17 @@ public class PlayerController : MonoBehaviour
         verticalInput = Input.GetAxis("Vertical");
 
 
-
-
     }
 
     void FixedUpdate()
     {
         // Wing scaling
         Wings.localScale = new Vector3(originalXScale, originalYScale, wingInput * 10);
-        //switch cam(move to own function)
 
-        float floatInput = wingInput;
-        glideCam.Priority = Mathf.RoundToInt(wingInput) * 10;
+
+
+
+
         // Calculate airflow (opposite to velocity)
         airflow = rb.linearVelocity.normalized;
 
