@@ -2839,7 +2839,7 @@ MonoBehaviour:
     RotationDamping: {x: 1, y: 1, z: 1}
     QuaternionDamping: 1
   OrbitStyle: 0
-  Radius: 25
+  Radius: 18.2
   Orbits:
     Top:
       Radius: 2
@@ -2933,8 +2933,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 380767390}
   serializedVersion: 2
-  m_LocalRotation: {x: -0.0000000382174, y: 0.00000011179341, z: 4.2724537e-15, w: 1}
-  m_LocalPosition: {x: 420, y: 81.17, z: 105.94389}
+  m_LocalRotation: {x: 0.00000012217477, y: -7.223769e-10, z: -6.5646673e-16, w: 1}
+  m_LocalPosition: {x: 420, y: 81.17, z: 112.7439}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -3298,7 +3298,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 423223433}
   serializedVersion: 2
-  m_LocalRotation: {x: -1.3110941e-12, y: 0.76738894, z: 0.6411819, w: -1.5706995e-12}
+  m_LocalRotation: {x: 0.000000024519633, y: 0.7673891, z: 0.6411817, w: 0.00000006132256}
   m_LocalPosition: {x: 420, y: 69.84333, z: 132.99005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -3810,7 +3810,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 518734719}
   serializedVersion: 2
-  m_LocalRotation: {x: -1.3118495e-12, y: 0.76738894, z: 0.6411819, w: -1.5700683e-12}
+  m_LocalRotation: {x: 0.000000040253273, y: 0.7673891, z: 0.6411817, w: 0.000000048176528}
   m_LocalPosition: {x: 420, y: 69.84333, z: 132.99005}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -13315,6 +13315,10 @@ PrefabInstance:
       value: 40
       objectReference: {fileID: 0}
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: playerInput
+      value: 
+      objectReference: {fileID: 2097487232}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: debugArrowScale
       value: 0.1
       objectReference: {fileID: 0}
@@ -13379,6 +13383,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 4854454022602634117, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       insertIndex: 5
       addedObject: {fileID: 2097487226}
+    - targetCorrespondingSourceObject: {fileID: 4854454022602634117, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2097487232}
   m_SourcePrefab: {fileID: 100100000, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
 --- !u!4 &2097487220 stripped
 Transform:
@@ -13399,6 +13406,36 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   glideCam: {fileID: 423223436}
   pogoCam: {fileID: 380767394}
+--- !u!114 &2097487232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 642511548}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
+  m_NotificationBehavior: 0
+  m_UIInputModule: {fileID: 0}
+  m_DeviceLostEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_DeviceRegainedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ControlsChangedEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  m_ActionEvents: []
+  m_NeverAutoSwitchControlSchemes: 0
+  m_DefaultControlScheme: 
+  m_DefaultActionMap: Player
+  m_SplitScreenIndex: -1
+  m_Camera: {fileID: 0}
 --- !u!1 &2099182770 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -8380157826906577798, guid: 34d9d14423c1abd47bc0954a355e79b1, type: 3}

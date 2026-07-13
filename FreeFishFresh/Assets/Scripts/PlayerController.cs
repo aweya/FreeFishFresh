@@ -1,28 +1,35 @@
 using JetBrains.Annotations;
-using Unity.Cinemachine;
+//using Unity.Cinemachine;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
     public Transform Wings;
+    public PlayerInput playerInput;
     private float originalXScale;
     private float originalYScale;
     public float liftMult = 1f;
     public float dragMult = 0.1f;
-    public float spaceInput;
-    public float horizontalInput;
-    public float verticalInput;
-    public float rollInput;
-
     public float staticJump = 200f;
 
-    public float wingInput;
     public float bounceForceMultiplier = 3;
-    public float speed = 80.0f;
+    public float debugSpeed = 80.0f;
     public float rotSpeed = 3f;
     public bool isTipGrounded = false;
     public float sideLift;
 
+    //inputs
+    public float rollInput;
+    public float rudderInput;
+    public float yawInput;
+    public float wingInput;
+    public int resetInput;
+    private InputAction rollAction;
+    private InputAction rudderAction;
+    private InputAction yawAction;
+    private InputAction wingAction;
+    private InputAction resetAction;
 
 
     public Vector3 sideLiftDirection;
@@ -35,6 +42,7 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 lift; // Store lift force
     private Vector3 airflow; // Store airflow direction
+    private float speed;
     private float angleOfAttack; // Store AoA value
 
     void Start()
@@ -56,20 +64,41 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Awake()
+    {
+        //define Inputs
+        playerInput = GetComponent<PlayerInput>();
+
+        rollAction = playerInput.actions["Roll"];
+        yawAction = playerInput.actions["Yaw"];
+        rudderAction = playerInput.actions["Rudder"];
+        wingAction = playerInput.actions["Wings"];
+        resetAction = playerInput.actions["Reset"];
+
+
+    }
+
     void Update()
     {
-        // Inputs
-        wingInput = Input.GetAxis("Fire1");
-        spaceInput = Input.GetAxis("Jump");
-        rollInput = Input.GetAxis("Yaw+");
-        horizontalInput = Input.GetAxis("Roll");
-        verticalInput = Input.GetAxis("Vertical");
-
+        //new inputs
+        // Read the current analog trigger values
+        rollInput = rollAction.ReadValue<float>();
+        yawInput = yawAction.ReadValue<float>();
+        rudderInput = rudderAction.ReadValue<float>();
+        wingInput = wingAction.ReadValue<float>();
+        if (resetAction.WasPressedThisFrame())
+        {
+            ResetGlider();
+        }
 
     }
 
     void FixedUpdate()
     {
+        speed = rb.linearVelocity.magnitude;
+        // Calculate airflow (opposite to velocity)
+        airflow = rb.linearVelocity.normalized;
+
         // Wing scaling
         Wings.localScale = new Vector3(originalXScale, originalYScale, wingInput * 10);
 
@@ -77,8 +106,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-        // Calculate airflow (opposite to velocity)
-        airflow = rb.linearVelocity.normalized;
+
 
         // Project airflow onto YX plane
         Vector3 projectedAirflow = Vector3.ProjectOnPlane(airflow, Wings.forward);
@@ -201,14 +229,29 @@ public class PlayerController : MonoBehaviour
             //transform.Rotate(0f,  0f,rudderAdjustment);
         }
         // Character controls (rotations and thrust)
-        rb.AddForce(Vector3.up * spaceInput * speed);
-        transform.Rotate(verticalInput * rotSpeed, rollInput * rotSpeed / 2f, horizontalInput * rotSpeed / 2f);
+        // rb.AddForce(Vector3.up * spaceInput * speed);// debug
 
-        // Reset functionality
-        if (Input.GetKeyDown(KeyCode.R))
+        //--new code---
+        //limit control with airspeed
+        float wingInfuelce;
+        if (wingInput > 0.2)
         {
-            ResetGlider();
+            wingInfuelce = (1.2f - wingInput) * (1 + speed / 10f);
         }
+        else
+        {
+            wingInfuelce = 1;
+        }
+        float trueYaw = (yawInput * rotSpeed) * wingInfuelce;
+        float trueRoll = (rollInput * rotSpeed / 2f) * wingInfuelce;
+        float trueRudder = (rudderInput * rotSpeed / 2f) * wingInfuelce;
+
+
+
+        // charcontrol lol
+        transform.Rotate(trueYaw, trueRoll, trueRudder);
+
+
     }
 
     void OnDrawGizmos()
