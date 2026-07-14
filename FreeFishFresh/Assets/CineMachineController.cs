@@ -1,5 +1,6 @@
 using UnityEngine;
 using Unity.Cinemachine;
+using Unity.Cinemachine.TargetTracking;
 
 public class CineMachineController : MonoBehaviour
 {
@@ -14,28 +15,44 @@ public class CineMachineController : MonoBehaviour
     void Start()
     {
         player = GetComponent<PlayerController>();
-        glideOrbit = glideCam.GetComponent<CinemachineOrbitalFollow>();
-        pogoOrbit = pogoCam.GetComponent<CinemachineOrbitalFollow>();
+        glideOrbit = glideCam.GetComponent<CinemachineOrbitalFollow>(); //lock to trget camera 
+        pogoOrbit = pogoCam.GetComponent<CinemachineOrbitalFollow>(); // worldspace camera
     }
 
     void Update()
     {
+        //--switch caemera
+
         int wingOpenAmount = Mathf.RoundToInt(player.wingInput) * 10;
         glideCam.Priority = wingOpenAmount;
 
-        SyncCams();
+        // if (player.wingInput > 0.5f)
+        // {
+        //     glideOrbit.TrackerSettings.BindingMode = BindingMode.LockToTarget;
+        // }
+        // else
+        // {
+        //     glideOrbit.TrackerSettings.BindingMode = BindingMode.WorldSpace;
+        // }
 
-        if (wingOpenAmount > 5)
-        {
-            SyncCams();
-        }
+        // pogoOrbit.TrackerSettings.BindingMode = BindingMode.LockToTarget;
+
+        // // SyncCams();
+        // if (player.wingInput < 5)
+        // {
+        //     pogoOrbit.TrackerSettings.BindingMode = BindingMode.WorldSpace;
+        // }
+        // else
+        // {
+        //     pogoOrbit.TrackerSettings.BindingMode = BindingMode.LockToTarget;
+        // }
     }
 
     void SyncCams()
     {
-        //sync pogo to glide cam
-        pogoCam.transform.position = glideCam.transform.position;
-        pogoCam.transform.rotation = glideCam.transform.rotation;
+        pogoOrbit.HorizontalAxis.Value = glideOrbit.HorizontalAxis.Value;
+        pogoOrbit.VerticalAxis.Value = glideOrbit.VerticalAxis.Value;
+        pogoOrbit.Radius = glideOrbit.Radius;
     }
 
 }

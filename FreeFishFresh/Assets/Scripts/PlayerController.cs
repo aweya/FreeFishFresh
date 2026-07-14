@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JetBrains.Annotations;
 //using Unity.Cinemachine;
 using UnityEngine;
@@ -18,6 +19,15 @@ public class PlayerController : MonoBehaviour
     public float rotSpeed = 3f;
     public bool isTipGrounded = false;
     public float sideLift;
+
+    [Header("Spring Parameters")]
+    public float restLenght = 1.1f;
+    public float springStrenght = 20f;
+    public float springDamping = 20f;
+    public float pogoFriction = 0.9f;
+    public Transform rayCenter;
+    public List<Transform> suspensionRays = new List<Transform>();
+
 
     //inputs
     public float rollInput;
@@ -202,14 +212,7 @@ public class PlayerController : MonoBehaviour
         // Debug forces for testing
         Debug.Log($"Lift: {lift}, Drag: {drag}");
 
-        // Jump mechanic
-        if (isTipGrounded)
-        {
-            Vector3 bounceDirection = transform.up; // Local "up" direction
-            float accumulatedForce = rb.linearVelocity.magnitude;
-            rb.AddForce(bounceDirection * (staticJump + accumulatedForce / 5) * bounceForceMultiplier, ForceMode.Impulse);
-            isTipGrounded = false; // Prevent multiple bounces
-        }
+
 
         // add a rudder nutralizer
 
@@ -228,6 +231,28 @@ public class PlayerController : MonoBehaviour
             // Rotate the player smoothly to align with the flight path
             //transform.Rotate(0f,  0f,rudderAdjustment);
         }
+
+        // ------Jump mechanic
+        //old jump
+
+        /* if (isTipGrounded)
+        {
+            Vector3 bounceDirection = transform.up; // Local "up" direction
+            float accumulatedForce = speed;
+            rb.AddForce(bounceDirection * (staticJump + accumulatedForce / 5) * bounceForceMultiplier, ForceMode.Impulse);
+            isTipGrounded = false; // Prevent multiple bounces
+        }
+ */
+
+        //new jump
+        /*
+        foreach (Transform ray in suspensionRays)
+        {
+            Suspension(ray);
+        }
+        */
+
+        Suspension(rayCenter);
         // Character controls (rotations and thrust)
         // rb.AddForce(Vector3.up * spaceInput * speed);// debug
 
@@ -244,7 +269,7 @@ public class PlayerController : MonoBehaviour
         }
         float trueYaw = (yawInput * rotSpeed) * wingInfuelce;
         float trueRoll = (rollInput * rotSpeed / 2f) * wingInfuelce;
-        float trueRudder = (rudderInput * rotSpeed / 2f) * wingInfuelce;
+        float trueRudder = (rudderInput * rotSpeed / 2.5f) * wingInfuelce * (1.5f - wingInput);
 
 
 
@@ -273,6 +298,48 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawSphere(endPosition2, 0.1f);
 
 
+    }
+
+    private void Suspension(Transform rayPos)
+    {
+        if (Physics.Raycast(rayPos.position, -transform.up, out RaycastHit hit, restLenght))
+        {
+            //----Suspension----
+            //calc srinng lenght
+            float springLenght = hit.distance;
+            Vector3 springDirection = transform.up;
+            //calc Spring offset
+            float offset = restLenght - springLenght;
+            //calc delta (spring velocity)
+            float springVelocity = Vector3.Dot(springDirection, rb.GetPointVelocity(rayPos.position));
+            //calc springForce
+            float springForce = (offset * springStrenght) - (springVelocity * springDamping);
+
+            //Ray gismo for supesion
+            Debug.DrawRay(rayPos.position, -transform.up * springLenght, Color.green);
+
+            //applyForces
+            rb.AddForceAtPosition(hit.normal * springForce, rayPos.position + transform.up * 1, ForceMode.Force);
+
+            // Add friction to pogo
+            //float pogoFriction = 0.9f;
+            Vector3 pogoVel = rb.GetPointVelocity(hit.point);
+            // where is this point at the contact or the supention base??
+
+            float xSpeed = (Vector3.Dot(pogoVel, rayPos.right));
+            float ySpeed = (Vector3.Dot(pogoVel, rayPos.up));
+            float zSpeed = (Vector3.Dot(pogoVel, rayPos.forward));
+
+            float xSlip = xSpeed * pogoFriction;
+            float yslip = 0;
+            // is this the same as spring dampening?
+            float zslip = zSpeed * pogoFriction;
+
+            // apply forces
+            rb.AddForceAtPosition(new Vector3(-xSlip, -yslip, -zslip), hit.point, ForceMode.Force);
+
+
+        }
     }
 
     public void ResetGlider()
