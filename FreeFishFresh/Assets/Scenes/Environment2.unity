@@ -3197,6 +3197,11 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: -153830957423991239, guid: 35aa177c0f5b28747b10c97fc269ede2, type: 3}
+--- !u!4 &415218012 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4887037119772410551, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+  m_PrefabInstance: {fileID: 2097487219}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &423223433
 GameObject:
   m_ObjectHideFlags: 0
@@ -13439,6 +13444,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 380767394}
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: pogoTip
+      value: 
+      objectReference: {fileID: 415218012}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: glideCam
       value: 
       objectReference: {fileID: 423223436}
@@ -13456,7 +13465,7 @@ PrefabInstance:
       objectReference: {fileID: 41230053}
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: restLenght
-      value: 2.39
+      value: 3.12
       objectReference: {fileID: 0}
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: staticJump
@@ -13472,7 +13481,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: springDamping
-      value: -33.7
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: springStrenght
@@ -13481,6 +13490,14 @@ PrefabInstance:
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: debugArrowScale
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: lenghtChancheSpeed
+      value: 0.05
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: originalrestlenght
+      value: 3.06
       objectReference: {fileID: 0}
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: suspensionRays.Array.size
@@ -13557,6 +13574,10 @@ PrefabInstance:
     - target: {fileID: 4854454022602634117, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: m_Name
       value: Player
+      objectReference: {fileID: 0}
+    - target: {fileID: 5716369459777237517, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: m_Name
+      value: pogoTip
       objectReference: {fileID: 0}
     - target: {fileID: 8164684307379623881, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: m_Enabled

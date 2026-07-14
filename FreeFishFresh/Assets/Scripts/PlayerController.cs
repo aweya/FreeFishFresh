@@ -3,6 +3,7 @@ using JetBrains.Annotations;
 //using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
@@ -21,10 +22,13 @@ public class PlayerController : MonoBehaviour
     public float sideLift;
 
     [Header("Spring Parameters")]
+    public float originalrestlenght = 1.1f;
     public float restLenght = 1.1f;
+    public float lenghtChancheSpeed = 1f;
     public float springStrenght = 20f;
     public float springDamping = 20f;
     public float pogoFriction = 0.9f;
+    public Transform pogoTip;
     public Transform rayCenter;
     public List<Transform> suspensionRays = new List<Transform>();
 
@@ -35,11 +39,13 @@ public class PlayerController : MonoBehaviour
     public float yawInput;
     public float wingInput;
     public int resetInput;
+    public int springInput;
     private InputAction rollAction;
     private InputAction rudderAction;
     private InputAction yawAction;
     private InputAction wingAction;
     private InputAction resetAction;
+    private InputAction springAction;
 
 
     public Vector3 sideLiftDirection;
@@ -57,6 +63,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        restLenght = originalrestlenght;
         rb = GetComponent<Rigidbody>();
 
         // Find the Wings object
@@ -84,6 +91,7 @@ public class PlayerController : MonoBehaviour
         rudderAction = playerInput.actions["Rudder"];
         wingAction = playerInput.actions["Wings"];
         resetAction = playerInput.actions["Reset"];
+        springAction = playerInput.actions["Spring"];
 
 
     }
@@ -99,6 +107,17 @@ public class PlayerController : MonoBehaviour
         if (resetAction.WasPressedThisFrame())
         {
             ResetGlider();
+        }
+        // chanche suspension lenght
+        if (springAction.IsPressed())
+        {
+            restLenght -= lenghtChancheSpeed;
+            Debug.Log("c was pressed");
+        }
+        if (springAction.WasReleasedThisFrame())
+        {
+            restLenght = originalrestlenght;
+            Debug.Log("C was released");
         }
 
     }
@@ -210,7 +229,7 @@ public class PlayerController : MonoBehaviour
         // rb.AddForce(drag);
 
         // Debug forces for testing
-        Debug.Log($"Lift: {lift}, Drag: {drag}");
+        //Debug.Log($"Lift: {lift}, Drag: {drag}");
 
 
 
@@ -252,7 +271,8 @@ public class PlayerController : MonoBehaviour
         }
         */
 
-        Suspension(rayCenter);
+        Suspension(rayCenter, pogoTip);
+
         // Character controls (rotations and thrust)
         // rb.AddForce(Vector3.up * spaceInput * speed);// debug
 
@@ -300,11 +320,12 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void Suspension(Transform rayPos)
+    private void Suspension(Transform rayPos, Transform pogoTip)
     {
         if (Physics.Raycast(rayPos.position, -transform.up, out RaycastHit hit, restLenght))
         {
             //----Suspension----
+
             //calc srinng lenght
             float springLenght = hit.distance;
             Vector3 springDirection = transform.up;
@@ -338,7 +359,14 @@ public class PlayerController : MonoBehaviour
             // apply forces
             rb.AddForceAtPosition(new Vector3(-xSlip, -yslip, -zslip), hit.point, ForceMode.Force);
 
+            // move tip
+            pogoTip.transform.position = hit.point;
 
+        }
+        else
+        {
+            // move tip
+            pogoTip.transform.position = rayPos.position - (transform.up * restLenght);
         }
     }
 
