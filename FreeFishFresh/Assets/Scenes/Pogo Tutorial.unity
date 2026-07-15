@@ -13232,6 +13232,18 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: boostForce
+      value: 40
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: isTipGrounded
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: rudderStabalisation
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 829899933889301130, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: m_LocalPosition.x
       value: 420

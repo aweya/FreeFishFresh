@@ -7,6 +7,7 @@ using UnityEngine.UIElements;
 
 public class PlayerController : MonoBehaviour
 {
+    [Header("Flight")]
     public Transform Wings;
     public PlayerInput playerInput;
     private float originalXScale;
@@ -14,23 +15,32 @@ public class PlayerController : MonoBehaviour
     public float liftMult = 1f;
     public float dragMult = 0.1f;
     public float staticJump = 200f;
-
-    public float bounceForceMultiplier = 3;
-    public float debugSpeed = 80.0f;
     public float rotSpeed = 3f;
-    public bool isTipGrounded = false;
     public float sideLift;
+    public float rudderStabalisation = 1;
+    public float pitchStabalisation = 0f;
+    public float maxControlSpeed = 30f; // speed above this stops adding extra control authority
 
     [Header("Spring Parameters")]
     public float originalrestlenght = 1.1f;
+    public float minLenght = 1f;
     public float restLenght = 1.1f;
     public float lenghtChancheSpeed = 1f;
     public float springStrenght = 20f;
     public float springDamping = 20f;
     public float pogoFriction = 0.9f;
     public Transform pogoTip;
+    public bool isTipGrounded = false;
     public Transform rayCenter;
     public List<Transform> suspensionRays = new List<Transform>();
+
+    [Header("Boost")]
+    public float boostForce = 1f;
+
+    //old
+    public float bounceForceMultiplier = 3;
+    public float debugSpeed = 80.0f;
+
 
 
     //inputs
@@ -40,12 +50,14 @@ public class PlayerController : MonoBehaviour
     public float wingInput;
     public int resetInput;
     public int springInput;
+    public float boostInput;
     private InputAction rollAction;
     private InputAction rudderAction;
     private InputAction yawAction;
     private InputAction wingAction;
     private InputAction resetAction;
     private InputAction springAction;
+    private InputAction boostAction;
 
 
     public Vector3 sideLiftDirection;
@@ -92,7 +104,7 @@ public class PlayerController : MonoBehaviour
         wingAction = playerInput.actions["Wings"];
         resetAction = playerInput.actions["Reset"];
         springAction = playerInput.actions["Spring"];
-
+        boostAction = playerInput.actions[("Boost")];
 
     }
 
@@ -104,14 +116,20 @@ public class PlayerController : MonoBehaviour
         yawInput = yawAction.ReadValue<float>();
         rudderInput = rudderAction.ReadValue<float>();
         wingInput = wingAction.ReadValue<float>();
+        boostInput = boostAction.ReadValue<float>();
+
         if (resetAction.WasPressedThisFrame())
         {
             ResetGlider();
         }
+
         // chanche suspension lenght
         if (springAction.IsPressed())
         {
-            restLenght -= lenghtChancheSpeed;
+            if (restLenght > minLenght)
+            {
+                restLenght -= lenghtChancheSpeed;
+            }
             Debug.Log("c was pressed");
         }
         if (springAction.WasReleasedThisFrame())
@@ -232,24 +250,28 @@ public class PlayerController : MonoBehaviour
         //Debug.Log($"Lift: {lift}, Drag: {drag}");
 
 
-
-        // add a rudder nutralizer
-
-        // Calculate the difference between the player's forward direction and the flight path
-        Vector3 flightDirection = rb.linearVelocity.normalized; // Flight direction (velocity-based)
-        Vector3 playerDirection = transform.forward; // Player's current forward direction
-
-        // Calculate the angle difference (yaw) between the directions
-
-        float rudderAngleDifference = Vector3.SignedAngle(playerDirection, flightDirection, Vector3.up);
-
-        // Apply a smoothing factor and wing input for how fast the rudder auto-centers
-        float rudderAdjustment = rudderAngleDifference * wingInput * Time.fixedDeltaTime * 0.1f; // Add Time.fixedDeltaTime for frame-rate independence
-        if (rudderAngleDifference < 0f)
+        // ---- Rudder / pitch neutralizer (weathervaning) ----
+        // Nudges the nose (transform.up) back toward the direction the glider is
+        // actually moving (rb.linearVelocity), like a real fin/rudder would.
+        if (speed > 0.5f) // skip when basically stationary, avoids jitter on the pogo
         {
-            // Rotate the player smoothly to align with the flight path
-            //transform.Rotate(0f,  0f,rudderAdjustment);
+            Vector3 flightDirection = rb.linearVelocity.normalized;
+
+            // Angle to swing the nose toward flightDirection, measured around the
+            // cockpit axis (transform.forward) -> this is the yaw/rudder correction.
+            float yawError = Vector3.SignedAngle(transform.up, flightDirection, transform.forward);
+
+            // Same idea measured around the wing axis (transform.right) -> pitch correction.
+            float pitchError = Vector3.SignedAngle(transform.up, flightDirection, transform.right);
+
+            // Only correct a fraction of the error each physics step. More wing out =
+            // more weathervane authority (matches your original intent).
+            float yawCorrection = yawError * wingInput * rudderStabalisation * Time.fixedDeltaTime;
+            float pitchCorrection = pitchError * wingInput * pitchStabalisation * Time.fixedDeltaTime;
+
+            transform.Rotate(pitchCorrection, 0f, yawCorrection, Space.Self);
         }
+
 
         // ------Jump mechanic
         //old jump
@@ -264,16 +286,14 @@ public class PlayerController : MonoBehaviour
  */
 
         //new jump
-        /*
-        foreach (Transform ray in suspensionRays)
-        {
-            Suspension(ray);
-        }
-        */
 
         Suspension(rayCenter, pogoTip);
 
+        //Boost
+        Boost();
+
         // Character controls (rotations and thrust)
+
         // rb.AddForce(Vector3.up * spaceInput * speed);// debug
 
         //--new code---
@@ -281,7 +301,8 @@ public class PlayerController : MonoBehaviour
         float wingInfuelce;
         if (wingInput > 0.2)
         {
-            wingInfuelce = (1.2f - wingInput) * (1 + speed / 10f);
+            float clampedSpeed = Mathf.Min(speed, maxControlSpeed);
+            wingInfuelce = (1.2f - wingInput) * (1 + clampedSpeed / 10f);
         }
         else
         {
@@ -325,7 +346,7 @@ public class PlayerController : MonoBehaviour
         if (Physics.Raycast(rayPos.position, -transform.up, out RaycastHit hit, restLenght))
         {
             //----Suspension----
-
+            isTipGrounded = true;
             //calc srinng lenght
             float springLenght = hit.distance;
             Vector3 springDirection = transform.up;
@@ -339,25 +360,25 @@ public class PlayerController : MonoBehaviour
             //Ray gismo for supesion
             Debug.DrawRay(rayPos.position, -transform.up * springLenght, Color.green);
 
-            //applyForces
+            //apply SupensionForces
             rb.AddForceAtPosition(hit.normal * springForce, rayPos.position + transform.up * 1, ForceMode.Force);
 
             // Add friction to pogo
             //float pogoFriction = 0.9f;
             Vector3 pogoVel = rb.GetPointVelocity(hit.point);
-            // where is this point at the contact or the supention base??
+
 
             float xSpeed = (Vector3.Dot(pogoVel, rayPos.right));
             float ySpeed = (Vector3.Dot(pogoVel, rayPos.up));
             float zSpeed = (Vector3.Dot(pogoVel, rayPos.forward));
 
             float xSlip = xSpeed * pogoFriction;
-            float yslip = 0;
-            // is this the same as spring dampening?
+            //float yslip = 0;
+            // is this the same as spring dampening? yes!
             float zslip = zSpeed * pogoFriction;
 
-            // apply forces
-            rb.AddForceAtPosition(new Vector3(-xSlip, -yslip, -zslip), hit.point, ForceMode.Force);
+            // apply Frictionforces
+            rb.AddForceAtPosition(new Vector3(-xSlip, 0, -zslip), hit.point, ForceMode.Force);
 
             // move tip
             pogoTip.transform.position = hit.point;
@@ -365,9 +386,19 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            isTipGrounded = false;
             // move tip
             pogoTip.transform.position = rayPos.position - (transform.up * restLenght);
+            //Ray gismo for supesion
+            Debug.DrawRay(rayPos.position, -transform.up * restLenght, Color.red);
         }
+    }
+
+    private void Boost()
+    {
+        //apply force
+        rb.AddForceAtPosition(transform.up * boostInput * boostForce, transform.position, ForceMode.Force);
+        //Debug.Log("boosIput"+boostInput);
     }
 
     public void ResetGlider()

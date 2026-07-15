@@ -58,6 +58,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "Boost",
+                    "type": "Value",
+                    "id": "cc4fdc52-c25b-4806-82bd-6aee02bc5d7b",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
                 }
             ],
             "bindings": [
@@ -96,7 +105,7 @@
                 },
                 {
                     "name": "1D Axis",
-                    "id": "7a36fbf4-e742-4378-ada9-9da0341bba53",
+                    "id": "60284eec-ab64-4ba0-822b-f66901a421a9",
                     "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
@@ -107,8 +116,8 @@
                 },
                 {
                     "name": "negative",
-                    "id": "d4f5d957-fbbd-4d64-b081-77791a9a2e9a",
-                    "path": "<Keyboard>/#(A)",
+                    "id": "8ca5875d-3a3b-4c32-8016-868b6ca2bcfa",
+                    "path": "<Keyboard>/q",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -118,8 +127,8 @@
                 },
                 {
                     "name": "positive",
-                    "id": "09f2bada-464e-4d8d-955d-b6d3cda2e642",
-                    "path": "<Keyboard>/d",
+                    "id": "0496c175-a645-4c8a-80c0-5b2e6afd3f8c",
+                    "path": "<Keyboard>/e",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -143,7 +152,7 @@
                     "id": "6bace1de-50e4-45c7-985f-5d7f626a60b2",
                     "path": "1DAxis",
                     "interactions": "",
-                    "processors": "",
+                    "processors": "Invert",
                     "groups": "",
                     "action": "Yaw",
                     "isComposite": true,
@@ -184,7 +193,7 @@
                 },
                 {
                     "name": "1D Axis",
-                    "id": "a2c9eb68-7821-4eba-94ab-cb0dc383ce67",
+                    "id": "e3ba3509-1fc2-4efc-85ea-06ec9700ac41",
                     "path": "1DAxis",
                     "interactions": "",
                     "processors": "",
@@ -195,8 +204,8 @@
                 },
                 {
                     "name": "negative",
-                    "id": "4c1819af-35fb-42d0-a03b-7b05a690a40f",
-                    "path": "<Keyboard>/q",
+                    "id": "ceb8c5a9-dcb5-4c12-abf3-b356cce8d252",
+                    "path": "<Keyboard>/#(A)",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -206,8 +215,8 @@
                 },
                 {
                     "name": "positive",
-                    "id": "db4f0edc-3eb2-4b43-abbb-ead0c5f16114",
-                    "path": "<Keyboard>/e",
+                    "id": "7cca41b5-91d8-4e24-a6ac-449b20275b80",
+                    "path": "<Keyboard>/d",
                     "interactions": "",
                     "processors": "",
                     "groups": "",
@@ -278,6 +287,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "Spring",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "808a3461-7830-45bf-bad4-285c8d79ace4",
+                    "path": "<Gamepad>/leftTrigger",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Boost",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "61181fe0-1e22-400d-87c8-a9e165177b89",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Boost",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
