@@ -365,12 +365,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 829899933889301130}
-  - component: {fileID: 8545828380120767215}
-  - component: {fileID: 7209319846297056229}
-  - component: {fileID: 3427754302433671391}
   - component: {fileID: 350176110568649396}
   - component: {fileID: 1277431668526201349}
   - component: {fileID: 1609565075682932285}
+  - component: {fileID: 8545828380120767215}
+  - component: {fileID: 7209319846297056229}
+  - component: {fileID: 3427754302433671391}
   - component: {fileID: 3606583397542080988}
   m_Layer: 0
   m_Name: PlayerModel
@@ -404,6 +404,104 @@ Transform:
   - {fileID: 5082215498297002516}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &350176110568649396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4854454022602634117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26ae0a46d3103244dbf08b2a8da65683, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cameraTransform: {fileID: 0}
+  rollToCameraSpeed: 180
+  speed: 0
+  Wings: {fileID: 2209398050870150567}
+  playerInput: {fileID: 3606583397542080988}
+  liftMult: 24.3
+  maxAeroSpeed: 40
+  dragMult: 0.7
+  staticJump: 40
+  rotSpeed: 6
+  sideLift: 0
+  rudderStabalisation: 1
+  pitchStabalisation: 0
+  maxControlSpeed: 30
+  originalrestlenght: 2.56
+  minLenght: 1
+  restLenght: 3.12
+  lenghtChancheSpeed: 0.025
+  springStrenght: 1259
+  springDamping: -15.7
+  pogoFriction: 0.68
+  pogoTip: {fileID: 4887037119772410551}
+  isTipGrounded: 0
+  rayCenter: {fileID: 7016385487805757259}
+  suspensionRays:
+  - {fileID: 5315587027577524257}
+  - {fileID: 656919100383297194}
+  - {fileID: 1545853064272028545}
+  - {fileID: 1000716603609749092}
+  boostForce: 1
+  bounceForceMultiplier: 4
+  debugSpeed: 80
+  rollInput: 0
+  rudderInput: 0
+  yawInput: 0
+  wingInput: 0
+  resetInput: 0
+  springInput: 0
+  boostInput: 0
+  sideLiftDirection: {x: 0, y: 0, z: 0}
+  debugArrowScale: 0.1
+  arrowOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &1277431668526201349
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4854454022602634117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e205c2aff67111f48961c08b11c88d63, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glideCam: {fileID: 0}
+  pogoCam: {fileID: 0}
+  BaseFov: 90
+  FovMultilier: 0
+  maxFovSpeed: 100
+--- !u!54 &1609565075682932285
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4854454022602634117}
+  serializedVersion: 4
+  m_Mass: 6.2
+  m_Drag: 0
+  m_AngularDrag: 2.2
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!33 &8545828380120767215
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -480,92 +578,6 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
---- !u!114 &350176110568649396
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4854454022602634117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 26ae0a46d3103244dbf08b2a8da65683, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Wings: {fileID: 2209398050870150567}
-  playerInput: {fileID: 3606583397542080988}
-  liftMult: 24.3
-  dragMult: 0.7
-  staticJump: 40
-  bounceForceMultiplier: 4
-  debugSpeed: 80
-  rotSpeed: 6
-  isTipGrounded: 0
-  sideLift: 0
-  originalrestlenght: 2.56
-  minLenght: 1
-  restLenght: 3.12
-  lenghtChancheSpeed: 0.025
-  springStrenght: 1259
-  springDamping: -15.7
-  pogoFriction: 0.68
-  pogoTip: {fileID: 4887037119772410551}
-  rayCenter: {fileID: 7016385487805757259}
-  suspensionRays:
-  - {fileID: 5315587027577524257}
-  - {fileID: 656919100383297194}
-  - {fileID: 1545853064272028545}
-  - {fileID: 1000716603609749092}
-  rollInput: 0
-  rudderInput: 0
-  yawInput: 0
-  wingInput: 0
-  resetInput: 0
-  springInput: 0
-  sideLiftDirection: {x: 0, y: 0, z: 0}
-  debugArrowScale: 0.1
-  arrowOffset: {x: 0, y: 0, z: 0}
---- !u!114 &1277431668526201349
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4854454022602634117}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e205c2aff67111f48961c08b11c88d63, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  glideCam: {fileID: 0}
-  pogoCam: {fileID: 0}
---- !u!54 &1609565075682932285
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4854454022602634117}
-  serializedVersion: 4
-  m_Mass: 6.2
-  m_Drag: 0
-  m_AngularDrag: 2.2
-  m_CenterOfMass: {x: 0, y: 0, z: 0}
-  m_InertiaTensor: {x: 1, y: 1, z: 1}
-  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ImplicitCom: 1
-  m_ImplicitTensor: 1
-  m_UseGravity: 1
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 0
-  m_CollisionDetection: 0
 --- !u!114 &3606583397542080988
 MonoBehaviour:
   m_ObjectHideFlags: 0

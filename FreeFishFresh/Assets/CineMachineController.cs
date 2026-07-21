@@ -1,12 +1,18 @@
 using UnityEngine;
 using Unity.Cinemachine;
 using Unity.Cinemachine.TargetTracking;
+using System.Buffers.Text;
 
 public class CineMachineController : MonoBehaviour
 {
+    [Header("Cams")]
 
     public CinemachineCamera glideCam;
     public CinemachineCamera pogoCam;
+    [Header("vars")]
+    public float BaseFov = 90f;
+    public float FovMultilier;
+    public float maxFov = 100f;
     private CinemachineOrbitalFollow glideOrbit;
     private CinemachineOrbitalFollow pogoOrbit;
     private PlayerController player;
@@ -17,6 +23,8 @@ public class CineMachineController : MonoBehaviour
         player = GetComponent<PlayerController>();
         glideOrbit = glideCam.GetComponent<CinemachineOrbitalFollow>(); //lock to trget camera 
         pogoOrbit = pogoCam.GetComponent<CinemachineOrbitalFollow>(); // worldspace camera
+        glideCam.Lens.FieldOfView = BaseFov;
+        pogoCam.Lens.FieldOfView = BaseFov;
     }
 
     void Update()
@@ -25,6 +33,12 @@ public class CineMachineController : MonoBehaviour
 
         int wingOpenAmount = Mathf.RoundToInt(player.wingInput) * 10;
         glideCam.Priority = wingOpenAmount;
+
+        // channge Fov with speed
+        float clampSpeed = Mathf.Clamp(player.speed, 1f, 10000f);
+        float effectiveFov = Mathf.Clamp(BaseFov * clampSpeed * FovMultilier, BaseFov, maxFov);
+        glideCam.Lens.FieldOfView = effectiveFov;
+        //pogoCam.Lens.FieldOfView = effectiveFov;
 
         // if (player.wingInput > 0.5f)
         // {
@@ -47,6 +61,10 @@ public class CineMachineController : MonoBehaviour
         //     pogoOrbit.TrackerSettings.BindingMode = BindingMode.LockToTarget;
         // }
     }
+
+
+
+
 
     void SyncCams()
     {
