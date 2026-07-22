@@ -2,17 +2,31 @@ using UnityEngine;
 
 public class CheckPontSingle : MonoBehaviour
 {
-    private FlagBehaviour Flag;
+    private FlagBehaviour flag;
+
+    [HideInInspector]
+    public Transform CheckPointReset;
+
+    [HideInInspector]
+    public LevelCheckPoints level;
+
     void Start()
     {
-        Flag = GetComponentInChildren<FlagBehaviour>();
+        flag = GetComponentInChildren<FlagBehaviour>();
+        CheckPointReset = transform.Find("CheckPointReset");
     }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("triggered");
-            Flag.ChangeColor();
+            level.CheckPointTriggered(this);
         }
+    }
+
+    public void Activate()
+    {
+        Debug.Log(name + " triggered");
+        flag.ChangeColor();
     }
 }

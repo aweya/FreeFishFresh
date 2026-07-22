@@ -13,6 +13,13 @@ public class PlayerController : MonoBehaviour
     public float rollToCameraSpeed = 180f; // max degrees/sec
     public float rollSmoothing = 8f;
     public float speed;
+
+    [Header("Control")]
+    public Transform rotationPoint;
+    public float rotationPointSpeed = 0.1f;
+    public Transform originalRotationPoint;
+    public float torqueStrength = 100f;
+
     [Header("Flight")]
     public Transform Wings;
     public PlayerInput playerInput;
@@ -85,6 +92,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
+        resetPoint.position = transform.position;
         restLenght = originalrestlenght;
         rb = GetComponent<Rigidbody>();
 
@@ -105,6 +113,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        originalRotationPoint.position = rotationPoint.position;
         //define Inputs
         playerInput = GetComponent<PlayerInput>();
 
@@ -140,14 +149,24 @@ public class PlayerController : MonoBehaviour
             {
                 restLenght -= lenghtChancheSpeed;
             }
-            Debug.Log("c was pressed");
         }
         if (springAction.WasReleasedThisFrame())
         {
             restLenght = originalrestlenght;
-            Debug.Log("C was released");
         }
 
+        //manage rotation point
+        if (isTipGrounded)
+        {
+            rotationPoint.position = pogoTip.position;
+        }
+        else
+        {
+            if (rotationPoint.localPosition.y < originalRotationPoint.localPosition.y)
+            {
+                rotationPoint.position += transform.up * rotationPointSpeed;
+            }
+        }
     }
 
     void FixedUpdate()
@@ -362,9 +381,49 @@ public class PlayerController : MonoBehaviour
         Vector3 camRight = Vector3.ProjectOnPlane(cameraTransform.right, Vector3.up).normalized;
         Vector3 camForward = Vector3.ProjectOnPlane(cameraTransform.forward, Vector3.up).normalized;
 
-        transform.Rotate(camRight, pitchAmount, Space.World);   // nose up/down as seen on screen
-        transform.Rotate(0, rollAmount, 0); // banks in the screen plane
-        transform.Rotate(camForward, yawAmount, Space.World);   // swings left/right as seen on screen
+        /*     // Pitch
+            transform.RotateAround(rotationPoint.position, camRight, pitchAmount);
+            // Roll
+            transform.RotateAround(rotationPoint.position, transform.up, rollAmount);
+            // Yaw
+            transform.RotateAround(rotationPoint.position, camForward, yawAmount); */
+
+
+        /* if (isTipGrounded == false)
+        {
+            transform.Rotate(camRight, pitchAmount, Space.World); // nose up/down as seen on screen 
+            transform.Rotate(0, rollAmount, 0); // banks in the screen plane 
+            transform.Rotate(camForward, yawAmount, Space.World); // swings left/right as seen on screen
+        }
+        else
+        {
+            // Pitch
+            transform.RotateAround(pogoTip.position, camRight, pitchAmount);
+
+            // Roll
+            transform.RotateAround(pogoTip.position, transform.up, rollAmount);
+
+            // Yaw
+            transform.RotateAround(pogoTip.position, camForward, yawAmount);
+        }
+ */
+        if (isTipGrounded == false)
+        {
+            transform.Rotate(camRight, pitchAmount, Space.World); // nose up/down as seen on screen 
+            transform.Rotate(0, rollAmount, 0); // banks in the screen plane 
+            transform.Rotate(camForward, yawAmount, Space.World); // swings left/right as seen on screen
+        }
+        else
+        {
+            rb.AddTorque(camRight * pitchAmount * torqueStrength, ForceMode.Force);
+            rb.AddTorque(transform.up * rollAmount * torqueStrength, ForceMode.Force);
+            rb.AddTorque(camForward * yawAmount * torqueStrength, ForceMode.Force);
+
+        }
+
+
+
+
     }
     private void RollTowardsCamera()
     {
@@ -411,9 +470,11 @@ public class PlayerController : MonoBehaviour
 
                 //calculate direction
                 Vector3 forceDirection = (hit.normal + transform.up).normalized;
+                Debug.DrawRay(hit.point, -forceDirection, Color.blue);
+                // try adding proprotional stregnt to angle
 
                 //apply SupensionForces
-                rb.AddForceAtPosition(forceDirection * springForce, rayPos.position + transform.up * 1, ForceMode.Force);
+                rb.AddForceAtPosition(transform.up * springForce, rayPos.position + transform.up * 1, ForceMode.Force);
 
                 // Add friction to pogo
                 //float pogoFriction = 0.9f;

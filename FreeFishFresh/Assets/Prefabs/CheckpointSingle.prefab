@@ -33,6 +33,7 @@ Transform:
   m_LocalScale: {x: 31.24045, y: 8.087988, z: 33.268906}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 3753077085695334211}
   - {fileID: 289323958149895343}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -122,6 +123,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272d1be10c207ea4babf40cb3f9e6eb1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  CheckPointReset: {fileID: 0}
+--- !u!1 &6307312132006561775
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3753077085695334211}
+  m_Layer: 0
+  m_Name: CheckPointReset
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3753077085695334211
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6307312132006561775}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.975, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1688965235683831419}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &254835897729921860
 PrefabInstance:
   m_ObjectHideFlags: 0
