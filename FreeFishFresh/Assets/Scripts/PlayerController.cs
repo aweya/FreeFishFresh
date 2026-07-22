@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
 {
     [Header("misc")]
     public Transform cameraTransform;
+    public Transform resetPoint;
     public float rollToCameraSpeed = 180f; // max degrees/sec
     public float rollSmoothing = 8f;
     public float speed;
@@ -391,47 +392,49 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics.Raycast(rayPos.position, -transform.up, out RaycastHit hit, restLenght))
         {
-            //----Suspension----
-            isTipGrounded = true;
-            //calc srinng lenght
-            float springLenght = hit.distance;
-            Vector3 springDirection = transform.up;
-            //calc Spring offset
-            float offset = restLenght - springLenght;
-            //calc delta (spring velocity)
-            float springVelocity = Vector3.Dot(springDirection, rb.GetPointVelocity(rayPos.position));
-            //calc springForce
-            float springForce = (offset * springStrenght) - (springVelocity * springDamping);
+            if (hit.collider.isTrigger == false)
+            {
+                //----Suspension----
+                isTipGrounded = true;
+                //calc srinng lenght
+                float springLenght = hit.distance;
+                Vector3 springDirection = transform.up;
+                //calc Spring offset
+                float offset = restLenght - springLenght;
+                //calc delta (spring velocity)
+                float springVelocity = Vector3.Dot(springDirection, rb.GetPointVelocity(rayPos.position));
+                //calc springForce
+                float springForce = (offset * springStrenght) - (springVelocity * springDamping);
 
-            //Ray gismo for supesion
-            Debug.DrawRay(rayPos.position, -transform.up * springLenght, Color.green);
+                //Ray gismo for supesion
+                Debug.DrawRay(rayPos.position, -transform.up * springLenght, Color.green);
 
-            //calculate direction
-            Vector3 forceDirection = (hit.normal + transform.up).normalized;
+                //calculate direction
+                Vector3 forceDirection = (hit.normal + transform.up).normalized;
 
-            //apply SupensionForces
-            rb.AddForceAtPosition(forceDirection * springForce, rayPos.position + transform.up * 1, ForceMode.Force);
+                //apply SupensionForces
+                rb.AddForceAtPosition(forceDirection * springForce, rayPos.position + transform.up * 1, ForceMode.Force);
 
-            // Add friction to pogo
-            //float pogoFriction = 0.9f;
-            Vector3 pogoVel = rb.GetPointVelocity(hit.point);
+                // Add friction to pogo
+                //float pogoFriction = 0.9f;
+                Vector3 pogoVel = rb.GetPointVelocity(hit.point);
 
 
-            float xSpeed = (Vector3.Dot(pogoVel, rayPos.right));
-            float ySpeed = (Vector3.Dot(pogoVel, rayPos.up));
-            float zSpeed = (Vector3.Dot(pogoVel, rayPos.forward));
+                float xSpeed = (Vector3.Dot(pogoVel, rayPos.right));
+                float ySpeed = (Vector3.Dot(pogoVel, rayPos.up));
+                float zSpeed = (Vector3.Dot(pogoVel, rayPos.forward));
 
-            float xSlip = xSpeed * pogoFriction;
-            //float yslip = 0;
-            // is this the same as spring dampening? yes!
-            float zslip = zSpeed * pogoFriction;
+                float xSlip = xSpeed * pogoFriction;
+                //float yslip = 0;
+                // is this the same as spring dampening? yes!
+                float zslip = zSpeed * pogoFriction;
 
-            // apply Frictionforces
-            rb.AddForceAtPosition(new Vector3(-xSlip, 0, -zslip), hit.point, ForceMode.Force);
+                // apply Frictionforces
+                rb.AddForceAtPosition(new Vector3(-xSlip, 0, -zslip), hit.point, ForceMode.Force);
 
-            // move tip
-            pogoTip.transform.position = hit.point;
-
+                // move tip
+                pogoTip.transform.position = hit.point;
+            }
         }
         else
         {
@@ -490,7 +493,7 @@ public class PlayerController : MonoBehaviour
         // Reset position and velocity
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        transform.position = new Vector3(416, 75, 123); // Adjust to your desired reset position
+        transform.position = resetPoint.position; // Adjust to your desired reset position
         transform.rotation = Quaternion.identity; // Reset orientation
         Debug.Log("Glider Reset");
     }
