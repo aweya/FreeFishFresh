@@ -20,7 +20,7 @@ public class CheckPontSingle : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            level.CheckPointTriggered(this);
+            level.CheckPointTriggered(this, false);
         }
     }
 

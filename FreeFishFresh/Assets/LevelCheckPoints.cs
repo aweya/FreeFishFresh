@@ -43,9 +43,31 @@ public class LevelCheckPoints : MonoBehaviour
         }
     }
 
-    public void CheckPointTriggered(CheckPontSingle checkpoint)
+    public void CheckPointTriggered(CheckPontSingle checkpoint, bool debug)
     {
         int checkpointIndex = checkpoints.IndexOf(checkpoint);
+
+        if (debug)
+        {
+            // Correct checkpoint
+            checkpoint.Activate();
+
+
+            playerController.resetPoint = checkpoint.CheckPointReset;
+            StatusMessage = "";
+
+            nextCheckpoint = checkpointIndex + 1;
+
+            if (nextCheckpoint >= checkpoints.Count)
+            {
+                isRaceRunning = false;
+                Debug.Log("Finished in " + raceTimer.ToString("F2") + " seconds!");
+                StatusMessage = "Finished in " + raceTimer.ToString("F2") + " seconds!";
+
+                nextCheckpoint = 0;
+            }
+        }
+
 
         // Already passed this checkpoint
         if (checkpointIndex < nextCheckpoint)

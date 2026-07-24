@@ -19,6 +19,9 @@ public class PlayerController : MonoBehaviour
     public float rotationPointSpeed = 0.1f;
     public Transform originalRotationPoint;
     public float torqueStrength = 100f;
+    public AnimationCurve slowMoCurve;
+    // public float slomoscale = 0.5f;
+    public float targetTimescale = 1f;
 
     [Header("Flight")]
     public Transform Wings;
@@ -75,6 +78,7 @@ public class PlayerController : MonoBehaviour
     private InputAction resetAction;
     private InputAction springAction;
     private InputAction boostAction;
+    public InputAction ESCAction;
 
 
     public Vector3 sideLiftDirection;
@@ -92,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
     void Start()
     {
-        resetPoint.position = transform.position;
+
         restLenght = originalrestlenght;
         rb = GetComponent<Rigidbody>();
 
@@ -113,6 +117,7 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        //resetPoint.position = transform.position;
         originalRotationPoint.position = rotationPoint.position;
         //define Inputs
         playerInput = GetComponent<PlayerInput>();
@@ -123,12 +128,14 @@ public class PlayerController : MonoBehaviour
         wingAction = playerInput.actions["Wings"];
         resetAction = playerInput.actions["Reset"];
         springAction = playerInput.actions["Spring"];
+        ESCAction = playerInput.actions["Menu"];
         boostAction = playerInput.actions[("Boost")];
 
     }
 
     void Update()
     {
+
         //new inputs
         // Read the current analog trigger values
         rollInput = rollAction.ReadValue<float>();
@@ -167,6 +174,8 @@ public class PlayerController : MonoBehaviour
                 rotationPoint.position += transform.up * rotationPointSpeed;
             }
         }
+        //t---ime
+        Time.timeScale = targetTimescale;
     }
 
     void FixedUpdate()
@@ -451,6 +460,8 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics.Raycast(rayPos.position, -transform.up, out RaycastHit hit, restLenght))
         {
+
+
             if (hit.collider.isTrigger == false)
             {
                 //----Suspension----
@@ -465,24 +476,31 @@ public class PlayerController : MonoBehaviour
                 //calc springForce
                 float springForce = (offset * springStrenght) - (springVelocity * springDamping);
 
+                //alter time using offset
+                float offsetAmount = springLenght / restLenght;
+                float scaledOffsetAmount = slowMoCurve.Evaluate(offsetAmount);
+
+                targetTimescale = Mathf.Clamp(scaledOffsetAmount, 0.05f, 1f);
+
                 //Ray gismo for supesion
                 Debug.DrawRay(rayPos.position, -transform.up * springLenght, Color.green);
 
                 //calculate direction
                 Vector3 forceDirection = (hit.normal + transform.up).normalized;
-                Debug.DrawRay(hit.point, -forceDirection, Color.blue);
+
+
                 // try adding proprotional stregnt to angle
 
                 //apply SupensionForces
                 rb.AddForceAtPosition(transform.up * springForce, rayPos.position + transform.up * 1, ForceMode.Force);
+                Debug.DrawRay(hit.point, forceDirection * 3, Color.blue);
 
                 // Add friction to pogo
-                //float pogoFriction = 0.9f;
+
                 Vector3 pogoVel = rb.GetPointVelocity(hit.point);
 
 
-                float xSpeed = (Vector3.Dot(pogoVel, rayPos.right));
-                float ySpeed = (Vector3.Dot(pogoVel, rayPos.up));
+                float xSpeed = Vector3.Dot(pogoVel, rayPos.right);
                 float zSpeed = (Vector3.Dot(pogoVel, rayPos.forward));
 
                 float xSlip = xSpeed * pogoFriction;
@@ -490,8 +508,14 @@ public class PlayerController : MonoBehaviour
                 // is this the same as spring dampening? yes!
                 float zslip = zSpeed * pogoFriction;
 
+                //i wonder if this friction force needs to be applied/projected on the hit.normal plane
+                //Vector3 frictionForce = (-xSlip * rayPos.right) + (-zslip * rayPos.forward);
+                Vector3 tangentVel = Vector3.ProjectOnPlane(pogoVel, hit.normal); // slide velocity along the actual surface
+                Vector3 frictionForce = -tangentVel * pogoFriction;
+
                 // apply Frictionforces
-                rb.AddForceAtPosition(new Vector3(-xSlip, 0, -zslip), hit.point, ForceMode.Force);
+                rb.AddForceAtPosition(frictionForce, hit.point, ForceMode.Force);
+                Debug.DrawRay(hit.point, frictionForce / 10f, Color.gray);
 
                 // move tip
                 pogoTip.transform.position = hit.point;
@@ -499,6 +523,9 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
+            //alter time
+            targetTimescale = 1f;
+
             isTipGrounded = false;
             // move tip
             pogoTip.transform.position = rayPos.position - (transform.up * restLenght);
@@ -551,12 +578,19 @@ public class PlayerController : MonoBehaviour
 
     public void ResetGlider()
     {
+        //reset time 
+        targetTimescale = 1f;
+
+
         // Reset position and velocity
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        transform.position = resetPoint.position; // Adjust to your desired reset position
-        transform.rotation = Quaternion.identity; // Reset orientation
+        rb.transform.position = resetPoint.position; // Adjust to your desired reset position
+        rb.transform.rotation = Quaternion.identity; // Reset orientation
+
+        Physics.SyncTransforms();
         Debug.Log("Glider Reset");
+
     }
 
     public void ApplyBounce(float impactForce)
