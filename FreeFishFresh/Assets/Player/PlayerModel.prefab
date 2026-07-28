@@ -529,8 +529,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 0}
   resetPoint: {fileID: 0}
-  rollToCameraSpeed: 223.7
-  rollSmoothing: 53.51
   speed: 0
   rotationPoint: {fileID: 8104574092997094134}
   rotationPointSpeed: 0.1
@@ -561,24 +559,73 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   targetTimescale: 1
+  rotSpeed: 3.23
+  airDensity: 1.225
+  area: 1
+  chord: 1
+  liftCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 5.626568
+      outSlope: 5.626568
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.11460526
+      value: 0.6448343
+      inSlope: 2.9537318
+      outSlope: 2.9537318
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.58000183
+      value: 0.7755623
+      inSlope: 0.28089592
+      outSlope: 0.28089592
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  dragCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   Wings: {fileID: 2209398050870150567}
   playerInput: {fileID: 3606583397542080988}
-  liftMult: 280
-  maxAeroSpeed: 40
-  dragMult: 0.52
-  staticJump: 40
-  rotSpeed: 6
+  liftMult: 235.3
+  dragMult: 1.6
   sideLift: 0
   rudderStabalisation: 0.4
   pitchStabalisation: 0
   maxControlSpeed: 30
   originalrestlenght: 1.9
   minLenght: 1
-  restLenght: 3.12
+  restLenght: 3
   lenghtChancheSpeed: 0.04
+  originalSpringStrenght: 24000
   springStrenght: 15298
-  springDamping: -11.07
-  pogoFriction: 40
+  springboostMultiplier: 1.5
+  springResetCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  resetTime: 1
+  springDamping: 0
+  pogoFriction: 19.1
   maxLeanGrip: 0.6
   pogoTip: {fileID: 4887037119772410551}
   isTipGrounded: 0
@@ -588,7 +635,7 @@ MonoBehaviour:
   - {fileID: 656919100383297194}
   - {fileID: 1545853064272028545}
   - {fileID: 1000716603609749092}
-  boostForce: 255.5
+  boostForce: 412.3
   bounceForceMultiplier: 4
   debugSpeed: 80
   rollInput: 0
@@ -635,7 +682,7 @@ Rigidbody:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4854454022602634117}
   serializedVersion: 4
-  m_Mass: 100
+  m_Mass: 200
   m_Drag: 0
   m_AngularDrag: 2.54
   m_CenterOfMass: {x: 0, y: 0, z: 0}
