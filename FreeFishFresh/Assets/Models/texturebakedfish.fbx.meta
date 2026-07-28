@@ -81,7 +81,7 @@ ModelImporter:
       level: 0
       cycleOffset: 0
       loop: 0
-      hasAdditiveReferencePose: 0
+      hasAdditiveReferencePose: 1
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 0
@@ -98,7 +98,7 @@ ModelImporter:
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}
-      additiveReferencePoseFrame: 0
+      additiveReferencePoseFrame: 13.7
     - serializedVersion: 16
       name: STICK_IDLE
       takeName: STICK_IDLE
@@ -111,7 +111,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -129,11 +129,11 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: GLIDING_IDLE
-      takeName: GLIDING_IDLE
+      name: OPENWINGS
+      takeName: OPENWINGS
       internalID: 1527979805968532823
       firstFrame: 0
-      lastFrame: 48
+      lastFrame: 13
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -187,8 +187,8 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: GLIDE_IDLE.001
-      takeName: GLIDE_IDLE.001
+      name: GLIDING_IDLE
+      takeName: GLIDING_IDLE
       internalID: -6996647666544799231
       firstFrame: 0
       lastFrame: 48
@@ -282,7 +282,7 @@ ModelImporter:
   autoGenerateAvatarMappingIfUnspecified: 1
   animationType: 2
   humanoidOversampling: 1
-  avatarSetup: 0
+  avatarSetup: 1
   addHumanoidExtraRootOnlyWhenUsingAvatar: 1
   importBlendShapeDeformPercent: 1
   remapMaterialsIfMaterialImportModeIsNone: 0
