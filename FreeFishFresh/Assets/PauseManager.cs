@@ -54,6 +54,7 @@ public class PauseMenu : MonoBehaviour
         if (paused)
         {
             playercontroller.targetTimescale = 0f;
+            Time.timeScale = 0f;
 
             playercontroller.playerInput.SwitchCurrentActionMap("UI");
             Cursor.lockState = CursorLockMode.None;
@@ -62,6 +63,7 @@ public class PauseMenu : MonoBehaviour
         else
         {
             playercontroller.targetTimescale = 1f;
+            Time.timeScale = 0f;
 
             playercontroller.playerInput.SwitchCurrentActionMap("Fish");
             Cursor.lockState = CursorLockMode.Locked;
