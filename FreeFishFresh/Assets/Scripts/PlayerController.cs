@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 //using Unity.Cinemachine;
@@ -20,12 +21,13 @@ public class PlayerController : MonoBehaviour
     public float torqueStrength = 100f;
     public AnimationCurve slowMoCurve;
     public float targetTimescale = 1f;
+    public int invertYaw = -1;
 
     public float rotSpeed = 3f;
     [Header("Aerodynamics")]
     public float airDensity = 1.225f;
     public float area = 1f;
-    public float chord = 1f;
+    public float dragModifier = 0.5f;
     public AnimationCurve liftCurve;   // CL vs angle of attack (degrees)
     public AnimationCurve dragCurve;   // CD vs angle of attack (degrees)
 
@@ -370,11 +372,11 @@ public class PlayerController : MonoBehaviour
         // charcontrol lol
         if (wingInput > 0.2)
         {
-            transform.Rotate(trueYaw, -trueRudder, -trueRoll);
+            transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
         }
         else
         {
-            ApplyCameraRelativeRotation(trueYaw, trueRoll, trueRudder);
+            ApplyCameraRelativeRotation(trueYaw * invertYaw, trueRoll, trueRudder);
 
         }
 
@@ -388,6 +390,7 @@ public class PlayerController : MonoBehaviour
         Vector3 worldFlowVelocity = -rb.linearVelocity;
         // once you add wind:      worldFlowVelocity += wind;
         // once you go per-surface: worldFlowVelocity -= Vector3.Cross(rb.angularVelocity, transform.position - rb.worldCenterOfMass);
+        Debug.DrawRay(transform.position, worldFlowVelocity, Color.red);
 
         Vector3 localFlowVelocity = transform.InverseTransformDirection(worldFlowVelocity);
 
@@ -395,8 +398,11 @@ public class PlayerController : MonoBehaviour
         // kill the spanwise component - a 2D wing model doesn't use it
         localFlowVelocity = new Vector3(0f, localFlowVelocity.y, localFlowVelocity.z);
 
+        Debug.DrawRay(transform.position, transform.TransformDirection(localFlowVelocity), Color.green);
+
         float dynamicPressure = 0.5f * airDensity * localFlowVelocity.sqrMagnitude;
         float angleOfAttack = Mathf.Atan2(localFlowVelocity.z, -localFlowVelocity.y);
+        //angleOfAttack = Math.Abs(angleOfAttack);
 
         float liftCoefficient = liftCurve.Evaluate(angleOfAttack * Mathf.Rad2Deg);
         float dragCoefficient = dragCurve.Evaluate(angleOfAttack * Mathf.Rad2Deg);
@@ -405,24 +411,18 @@ public class PlayerController : MonoBehaviour
         Vector3 liftDirection = Vector3.Cross(dragDirection, transform.right); // right = spanwise
 
         lift = liftDirection * liftCoefficient * dynamicPressure * area; // you already have `lift` as a field for the gizmo
-        Vector3 drag = dragDirection * dragCoefficient * dynamicPressure * area;
+        Vector3 drag = dragDirection * dragCoefficient * dynamicPressure * area * dragModifier;
 
-        rb.AddForce(lift + drag); // plain AddForce, not AddForceAtPosition — keeps this translation-only until you add torque on purpose
-    }
+        Vector3 combinedForces = (lift + drag) * wingInput;
 
-    void OnDrawGizmos()
-    {
-        if (rb == null) return;
+        rb.AddForce(combinedForces); // plain AddForce, not AddForceAtPosition — keeps this translation-only until you add torque on purpose
 
-        // Draw lift arrow
-        Gizmos.color = Color.green;
-        Vector3 startPosition = transform.position + arrowOffset;
-        Vector3 endPosition = startPosition + lift * debugArrowScale;
-        Gizmos.DrawLine(startPosition, endPosition);
-        Gizmos.DrawSphere(endPosition, 0.1f);
-
+        // Debug.DrawRay(transform.position, drag * wingInput, Color.red);
+        // Debug.DrawRay(transform.position, lift * wingInput, Color.green);
 
     }
+
+
     private void ApplyCameraRelativeRotation(float pitchAmount, float rollAmount, float yawAmount)
     {
         if (cameraTransform == null) return;
