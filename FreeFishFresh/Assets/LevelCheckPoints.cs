@@ -5,6 +5,7 @@ public class LevelCheckPoints : MonoBehaviour
 {
     public List<CheckPontSingle> checkpoints = new List<CheckPontSingle>();
     public PlayerController playerController;
+    public EndScreenManager endScreenManager;
     public string StatusMessage = "";
 
     private int nextCheckpoint = 0;
@@ -15,17 +16,14 @@ public class LevelCheckPoints : MonoBehaviour
     {
         checkpoints.Clear();
 
-        foreach (Transform child in transform)
+
+
+        foreach (CheckPontSingle checkpoint in GetComponentsInChildren<CheckPontSingle>())
         {
-            CheckPontSingle checkpoint = child.GetComponent<CheckPontSingle>();
+            checkpoints.Add(checkpoint);
+            checkpoint.level = this;
 
-
-            if (checkpoint != null)
-            {
-                Debug.Log("i registered this checkpoint" + checkpoint);
-                checkpoints.Add(checkpoint);
-                checkpoint.level = this;
-            }
+            Debug.Log("Registered " + checkpoint.name);
         }
     }
 
@@ -60,11 +58,7 @@ public class LevelCheckPoints : MonoBehaviour
 
             if (nextCheckpoint >= checkpoints.Count)
             {
-                isRaceRunning = false;
-                Debug.Log("Finished in " + raceTimer.ToString("F2") + " seconds!");
-                StatusMessage = "Finished in " + raceTimer.ToString("F2") + " seconds!";
-
-                nextCheckpoint = 0;
+                RaceFinished();
             }
         }
 
@@ -96,11 +90,19 @@ public class LevelCheckPoints : MonoBehaviour
 
         if (nextCheckpoint >= checkpoints.Count)
         {
-            isRaceRunning = false;
-            Debug.Log("Finished in " + raceTimer.ToString("F2") + " seconds!");
-            StatusMessage = "Finished in " + raceTimer.ToString("F2") + " seconds!";
-
-            nextCheckpoint = 0;
+            RaceFinished();
         }
+    }
+
+    public void RaceFinished()
+    {
+        isRaceRunning = false;
+        endScreenManager.ShowEndScreen(raceTimer);
+        Debug.Log("Finished in " + raceTimer.ToString("F2") + " seconds!");
+        StatusMessage = "Finished in " + raceTimer.ToString("F2") + " seconds!";
+
+
+
+        nextCheckpoint = 0;
     }
 }

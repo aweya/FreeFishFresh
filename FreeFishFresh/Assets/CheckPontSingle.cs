@@ -2,18 +2,19 @@ using UnityEngine;
 
 public class CheckPontSingle : MonoBehaviour
 {
-    private FlagBehaviour flag;
+    public FlagBehaviour flag;
 
-    [HideInInspector]
+
     public Transform CheckPointReset;
 
     [HideInInspector]
     public LevelCheckPoints level;
 
+
     void Start()
     {
-        flag = GetComponentInChildren<FlagBehaviour>();
-        CheckPointReset = transform.Find("CheckPointReset");
+
+        // CheckPointReset = transform.Find("CheckPointReset");
     }
 
     void OnTriggerEnter(Collider other)

@@ -562,8 +562,8 @@ MonoBehaviour:
   invertYaw: 1
   rotSpeed: 3.23
   airDensity: 1.12
-  area: 20
-  dragModifier: 1
+  area: 54.3
+  dragModifier: 0.5
   liftCurve:
     serializedVersion: 2
     m_Curve:

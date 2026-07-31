@@ -131,6 +131,7 @@ public class PlayerController : MonoBehaviour
         originalRotationPoint.position = rotationPoint.position;
         //define Inputs
         playerInput = GetComponent<PlayerInput>();
+        playerInput.SwitchCurrentActionMap("Fish");
 
         rollAction = playerInput.actions["Roll"];
         yawAction = playerInput.actions["Yaw"];
