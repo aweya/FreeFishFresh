@@ -28,8 +28,7 @@ public class TutorialManager : MonoBehaviour
 
         if (paused)
         {
-            playerController.targetTimescale = 0f;
-            Time.timeScale = 0f;
+            playerController.gamePaused = paused;
 
             playerController.playerInput.SwitchCurrentActionMap("UI");
             Cursor.lockState = CursorLockMode.None;
@@ -37,8 +36,7 @@ public class TutorialManager : MonoBehaviour
         }
         else
         {
-            playerController.targetTimescale = 1f;
-            Time.timeScale = 0f;
+            playerController.gamePaused = paused;
 
             playerController.playerInput.SwitchCurrentActionMap("Fish");
             Cursor.lockState = CursorLockMode.Locked;

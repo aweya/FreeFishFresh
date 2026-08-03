@@ -763,7 +763,7 @@ MonoBehaviour:
   glideCam: {fileID: 0}
   pogoCam: {fileID: 0}
   BaseFov: 90
-  FovMultilier: 0.24
+  FovMultilier: 0.05
   maxFov: 122.5
 --- !u!54 &1609565075682932285
 Rigidbody:

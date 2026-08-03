@@ -21,25 +21,26 @@ public class PlayerController : MonoBehaviour
     public float torqueStrength = 100f;
     public AnimationCurve slowMoCurve;
     public float targetTimescale = 1f;
+    public bool gamePaused = false;
     public int invertYaw = -1;
 
     public float rotSpeed = 3f;
+
     [Header("Aerodynamics")]
     public float airDensity = 1.225f;
     public float area = 1f;
+    public float rudderArea = 4f;
     public float dragModifier = 0.5f;
     public AnimationCurve liftCurve;   // CL vs angle of attack (degrees)
     public AnimationCurve dragCurve;   // CD vs angle of attack (degrees)
+    public AnimationCurve rudderLiftCurve;
+    public AnimationCurve rudderDragCurve;
 
-    [Header("Flight")]
     public Transform Wings;
+    public Transform rudderTransform;
     public PlayerInput playerInput;
     private float originalXScale;
     private float originalYScale;
-    public float liftMult = 1f;
-    public float dragMult = 0.1f;
-
-    public float sideLift;
     public float rudderStabalisation = 1;
     public float pitchStabalisation = 0f;
     public float maxControlSpeed = 30f; // speed above this stops adding extra control authority
@@ -192,6 +193,19 @@ public class PlayerController : MonoBehaviour
             }
         }
         //t---ime
+        if (!isTipGrounded)
+        {
+            //alter time
+            if (gamePaused)
+            {
+                targetTimescale = 0;
+            }
+            else
+            {
+                targetTimescale = 1f;
+            }
+        }
+
         Time.timeScale = targetTimescale;
     }
 
@@ -201,145 +215,10 @@ public class PlayerController : MonoBehaviour
 
         // Wing scaling
         Wings.localScale = new Vector3(originalXScale, originalYScale, wingInput * 10);
-        //ApplyAerodynamics();
-
-        /*
-                // Calculate airflow (opposite to velocity)
-                airflow = rb.linearVelocity.normalized;
 
 
-
-                // Project airflow onto YX plane
-                Vector3 projectedAirflow = Vector3.ProjectOnPlane(airflow, Wings.forward);
-
-                // Calculate AoA relative to the YX plane
-                angleOfAttack = Vector3.SignedAngle(Wings.up, projectedAirflow, Wings.right);
-
-
-                // Forward speed
-                Vector3 forwardVelocity = Vector3.Project(rb.linearVelocity, transform.up);
-                float forwardSpeed = forwardVelocity.magnitude;
-
-
-
-                // Calculate lift direction (perpendicular to airflow)
-                Vector3 liftDirection = Vector3.Cross(airflow, -transform.right).normalized;
-
-
-
-                // Ensure liftDirection doesn't flip backward
-                if (Vector3.Dot(liftDirection, transform.up) < 0)
-                {
-                    liftDirection = -liftDirection;
-                }
-
-
-                //lift cals
-                float optimalAoA = 15f; // AoA for max lift
-                float stallAoA = 40f;   // AoA where stall begins
-
-                float normalizedAoA = angleOfAttack / optimalAoA;
-                float liftCoefficient;
-
-                // Parabolic lift curve with stall behavior
-                if (Mathf.Abs(angleOfAttack) <= stallAoA)
-                {
-                    liftCoefficient = Mathf.Max(0.2f, 1f - Mathf.Pow(normalizedAoA, 2));
-                }
-                else
-                {
-                    // Post-stall: Lift drops rapidly
-                    liftCoefficient = Mathf.Max(0.1f, 1f - ((Mathf.Abs(angleOfAttack) - stallAoA) / stallAoA));
-                }
-
-
-                //liftCoefficient=1;
-
-                //Debug.Log(forwardSpeed );
-
-
-                float helpSpeed = forwardSpeed;
-                if (helpSpeed > 7f)
-                {
-                    helpSpeed = forwardSpeed / 1.5f;
-                }
-                if (helpSpeed > 10f)
-                {
-                    helpSpeed = forwardSpeed / 2f;
-                }
-
-                float helpSpeed2 = forwardSpeed;
-                if (helpSpeed2 > 5f)
-                {
-                    helpSpeed2 = forwardSpeed / 2f;
-                }
-                if (helpSpeed2 > 7f)
-                {
-                    helpSpeed2 = forwardSpeed / 4f;
-                }
-                if (helpSpeed2 > 10f)
-                {
-                    helpSpeed2 = forwardSpeed / 10f;
-                }
-                // Calculate lift force
-                lift = liftDirection * helpSpeed * wingInput * liftCoefficient * liftMult;
-
-                // Apply lift force
-                rb.AddForce(lift);
-
-                // Calculate banking lift for smoother turning
-                sideLiftDirection = Vector3.Cross(transform.forward, Vector3.up).normalized;
-
-                // Add lateral lift to aid turning at low speeds
-                sideLift = wingInput * helpSpeed2 * liftCoefficient * 0.1f; // Adjust 0.3f for tuning
-                rb.AddForce(sideLiftDirection * sideLift);
-
-                // Calculate drag force (opposes airflow)
-                Vector3 drag = -airflow * forwardSpeed * wingInput * dragMult;
-
-                // Apply drag force
-                rb.AddForce(drag);
-
-                // Debug forces for testing
-                //Debug.Log($"Lift: {lift}, Drag: {drag}");
-
-        */
-
-
-
-        // ---- Rudder / pitch neutralizer (weathervaning) ----
-        // Nudges the nose (transform.up) back toward the direction the glider is
-        // actually moving (rb.linearVelocity), like a real fin/rudder would.
-        if (speed > 0.5f) // skip when basically stationary, avoids jitter on the pogo
-        {
-            Vector3 flightDirection = rb.linearVelocity.normalized;
-
-            // Angle to swing the nose toward flightDirection, measured around the
-            // cockpit axis (transform.forward) -> this is the yaw/rudder correction.
-            float yawError = Vector3.SignedAngle(transform.up, flightDirection, transform.forward);
-
-            // Same idea measured around the wing axis (transform.right) -> pitch correction.
-            float pitchError = Vector3.SignedAngle(transform.up, flightDirection, transform.right);
-
-            // Only correct a fraction of the error each physics step. More wing out =
-            // more weathervane authority (matches your original intent).
-            float yawCorrection = yawError * wingInput * rudderStabalisation * Time.fixedDeltaTime;
-            float pitchCorrection = pitchError * wingInput * pitchStabalisation * Time.fixedDeltaTime;
-
-            transform.Rotate(pitchCorrection, 0f, yawCorrection, Space.Self);
-        }
-
-
-        // ------Jump mechanic
-        //old jump
-        /* if (isTipGrounded)
-        {
-            Vector3 bounceDirection = transform.up; // Local "up" direction
-            float accumulatedForce = speed;
-            rb.AddForce(bounceDirection * (staticJump + accumulatedForce / 5) * bounceForceMultiplier, ForceMode.Impulse);
-            isTipGrounded = false; // Prevent multiple bounces
-        }
- */
+        //RudderNutrolizer();
+        AeroRudder();
 
         Aerodynamics();
         //new jump
@@ -373,7 +252,13 @@ public class PlayerController : MonoBehaviour
         // charcontrol lol
         if (wingInput > 0.2)
         {
-            transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
+            //with rudder
+            //  transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
+            //no rudder
+            transform.Rotate(trueYaw * invertYaw, -trueRudder, 0);
+            float rudderAngle = 50;
+            rudderTransform.localRotation = Quaternion.Euler(0f, 0f, -trueRoll * rudderAngle);
+
         }
         else
         {
@@ -391,7 +276,7 @@ public class PlayerController : MonoBehaviour
         Vector3 worldFlowVelocity = -rb.linearVelocity;
         // once you add wind:      worldFlowVelocity += wind;
         // once you go per-surface: worldFlowVelocity -= Vector3.Cross(rb.angularVelocity, transform.position - rb.worldCenterOfMass);
-        Debug.DrawRay(transform.position, worldFlowVelocity, Color.red);
+        // Debug.DrawRay(transform.position, worldFlowVelocity, Color.red);
 
         Vector3 localFlowVelocity = transform.InverseTransformDirection(worldFlowVelocity);
 
@@ -399,7 +284,7 @@ public class PlayerController : MonoBehaviour
         // kill the spanwise component - a 2D wing model doesn't use it
         localFlowVelocity = new Vector3(0f, localFlowVelocity.y, localFlowVelocity.z);
 
-        Debug.DrawRay(transform.position, transform.TransformDirection(localFlowVelocity), Color.green);
+        //Debug.DrawRay(transform.position, transform.TransformDirection(localFlowVelocity), Color.green);
 
         float dynamicPressure = 0.5f * airDensity * localFlowVelocity.sqrMagnitude;
         float angleOfAttack = Mathf.Atan2(localFlowVelocity.z, -localFlowVelocity.y);
@@ -422,6 +307,70 @@ public class PlayerController : MonoBehaviour
         // Debug.DrawRay(transform.position, lift * wingInput, Color.green);
 
     }
+
+    private void AeroRudder()
+    {
+        // air relative to the craft, world space (no wind yet)
+        Vector3 worldFlowVelocity = -rb.linearVelocity;
+        // once you add wind:      worldFlowVelocity += wind;
+        // once you go per-surface: worldFlowVelocity -= Vector3.Cross(rb.angularVelocity, transform.position - rb.worldCenterOfMass);
+        // Debug.DrawRay(transform.position, worldFlowVelocity, Color.red);
+
+        Vector3 localFlowVelocity = rudderTransform.InverseTransformDirection(worldFlowVelocity);
+
+        // your axes: Y = nose (chordwise), x = cockpit (normal/lift), z = right (spanwise)
+        // kill the spanwise component - a 2D wing model doesn't use it
+        localFlowVelocity = new Vector3(localFlowVelocity.x, localFlowVelocity.y, 0);
+
+
+
+        float dynamicPressure = 0.5f * airDensity * localFlowVelocity.sqrMagnitude;
+        float angleOfAttack = Mathf.Atan2(-localFlowVelocity.x, -localFlowVelocity.y);
+
+
+        float liftCoefficient = rudderLiftCurve.Evaluate(angleOfAttack * Mathf.Rad2Deg);
+        float dragCoefficient = rudderDragCurve.Evaluate(angleOfAttack * Mathf.Rad2Deg);
+
+        Vector3 dragDirection = rudderTransform.TransformDirection(localFlowVelocity.normalized);
+        Vector3 liftDirection = Vector3.Cross(dragDirection, rudderTransform.forward); // right = spanwise
+
+        Vector3 rudderLift = liftDirection * liftCoefficient * dynamicPressure * rudderArea; // you already have `lift` as a field for the gizmo
+        Vector3 drag = dragDirection * dragCoefficient * dynamicPressure * rudderArea * dragModifier;
+
+        Vector3 combinedForces = (rudderLift + drag) * wingInput;
+
+        rb.AddForceAtPosition(combinedForces, rudderTransform.position); // plain AddForce, not AddForceAtPosition — keeps this translation-only until you add torque on purpose
+
+        Debug.DrawRay(rudderTransform.position, rudderLift, Color.green);
+
+    }
+
+
+    private void RudderNutrolizer()
+    {
+        // ---- Rudder / pitch neutralizer (weathervaning) ----
+        // Nudges the nose (transform.up) back toward the direction the glider is
+        // actually moving (rb.linearVelocity), like a real fin/rudder would.
+        if (speed > 0.5f) // skip when basically stationary, avoids jitter on the pogo
+        {
+            Vector3 flightDirection = rb.linearVelocity.normalized;
+
+            // Angle to swing the nose toward flightDirection, measured around the
+            // cockpit axis (transform.forward) -> this is the yaw/rudder correction.
+            float yawError = Vector3.SignedAngle(transform.up, flightDirection, transform.forward);
+
+            // Same idea measured around the wing axis (transform.right) -> pitch correction.
+            float pitchError = Vector3.SignedAngle(transform.up, flightDirection, transform.right);
+
+            // Only correct a fraction of the error each physics step. More wing out =
+            // more weathervane authority (matches your original intent).
+            float yawCorrection = yawError * wingInput * rudderStabalisation * Time.fixedDeltaTime;
+            float pitchCorrection = pitchError * wingInput * pitchStabalisation * Time.fixedDeltaTime;
+
+            transform.Rotate(pitchCorrection, 0f, yawCorrection, Space.Self);
+        }
+    }
+
 
 
     private void ApplyCameraRelativeRotation(float pitchAmount, float rollAmount, float yawAmount)
@@ -495,11 +444,19 @@ public class PlayerController : MonoBehaviour
                 //calc springForce
                 float springForce = (offset * springStrenght) - (springVelocity * springDamping);
 
-                //alter time using offset
-                float offsetAmount = springLenght / restLenght;
-                float scaledOffsetAmount = slowMoCurve.Evaluate(offsetAmount);
+                //--slomoeffect--
+                if (gamePaused)
+                {
+                    targetTimescale = 0f;
+                }
+                else
+                {
+                    //alter time using offset
+                    float offsetAmount = springLenght / restLenght;
+                    float scaledOffsetAmount = slowMoCurve.Evaluate(offsetAmount);
 
-                targetTimescale = Mathf.Clamp(scaledOffsetAmount, 0.05f, 1f);
+                    targetTimescale = Mathf.Clamp(scaledOffsetAmount, 0.05f, 1f);
+                }
 
                 //Ray gismo for supesion
                 Debug.DrawRay(rayPos.position, -transform.up * springLenght, Color.green);
@@ -542,9 +499,6 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            //alter time
-            targetTimescale = 1f;
-
             isTipGrounded = false;
             // move tip
             pogoTip.transform.position = rayPos.position - (transform.up * restLenght);
@@ -572,7 +526,7 @@ public class PlayerController : MonoBehaviour
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
         rb.transform.position = resetPoint.position; // Adjust to your desired reset position
-        rb.transform.rotation = Quaternion.identity; // Reset orientation
+        rb.transform.rotation = resetPoint.rotation; // Reset orientation
 
         Physics.SyncTransforms();
         Debug.Log("Glider Reset");
