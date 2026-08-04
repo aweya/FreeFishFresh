@@ -49,7 +49,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 419254435025289264}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -947,9 +947,47 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 350176110568649396}
   isWet: 0
-  linearWaterDampening: 4
-  angularWaterDampening: 8
-  floatingForce: 2
+  linearWaterDampening: 1.2
+  angularWaterDampening: 3
+  floatingForce: 1061.2
+  boost: 2855
+  boostCooldown: 2.1
+  boostRewardCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.24622315
+      value: -0.008740665
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.50150687
+      value: 1.0641246
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.828598
+      value: 0.003361106
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  waterAirDensity: 1.66
+  isFirstBoost: 1
+  BoostCooldownProgress: 0
 --- !u!114 &1277431668526201349
 MonoBehaviour:
   m_ObjectHideFlags: 0

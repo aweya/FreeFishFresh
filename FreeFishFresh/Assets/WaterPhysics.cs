@@ -1,3 +1,5 @@
+using System.Collections;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,8 +13,11 @@ public class WaterPhysics : MonoBehaviour
     public float floatingForce = 2f;
     public float boost;
     public float boostCooldown = 4f;
+    public float boostDuration = 2f;
     public AnimationCurve boostRewardCurve;
+    public AnimationCurve boostApplicationCurve;
     public float waterAirDensity = 2.5f; // like fukin sirup it up
+    public bool isFirstBoost = true;
 
 
     public float BoostCooldownProgress;
@@ -24,6 +29,8 @@ public class WaterPhysics : MonoBehaviour
     private float originalAngularDampening;
     private float originalAirDensity;
     private float boostTimer = 0f;
+    //private bool corutineIsRunning = false;
+
 
     void Start()
     {
@@ -59,10 +66,16 @@ public class WaterPhysics : MonoBehaviour
             playerController.airDensity = originalAirDensity;
         }
 
-
-        WaterFlappingprogrssive();
-
+        if (isFirstBoost)
+        {
+            FirstBoost();
+        }
+        else
+        {
+            WaterFlappingprogrssive();
+        }
     }
+
     void FixedUpdate()
     {
         if (isWet)
@@ -73,17 +86,20 @@ public class WaterPhysics : MonoBehaviour
 
     private void Floatation()
     {
-        rb.AddForce(transform.up * floatingForce);
+        rb.AddForce(Vector3.up * floatingForce);
     }
 
-    private void WaterFlapping()
+    private void FirstBoost()
     {
 
-        if (!WasFlapPressed())
-            return;
+        if (playerController.springInput > 0.2 && isWet)
+        {
 
-        rb.AddForce(rb.transform.up * boost, ForceMode.Impulse);
-        boostTimer = 0f;
+            //ApplyBoost(1);
+            StartCoroutine(BoostCorutine(1));
+            boostTimer = boostCooldown;
+            isFirstBoost = false;
+        }
     }
 
     private void WaterFlappingprogrssive()
@@ -91,25 +107,38 @@ public class WaterPhysics : MonoBehaviour
         boostTimer = Mathf.Max(0f, boostTimer - Time.deltaTime);
 
         BoostCooldownProgress = 1f - (boostTimer / boostCooldown);
-
+        if (BoostCooldownProgress >= 1)
+        {
+            isFirstBoost = true;
+        }
         if (playerController.springInput > 0.2 && isWet)
         {
             float boostPercent;
             boostPercent = boostRewardCurve.Evaluate(BoostCooldownProgress);
-            rb.AddForce(rb.transform.up * boost * boostPercent, ForceMode.Impulse);
+            ApplyBoost(boostPercent);
             boostTimer = boostCooldown;
         }
     }
-
-
-    private bool WasFlapPressed()
+    IEnumerator BoostCorutine(float boostPercent)
     {
-        if (playerController.playerInput == null)
-            return false;
+        for (float t = 0; t <= 1; t += Time.fixedDeltaTime / boostDuration)
+        {
+            float scaleT = boostApplicationCurve.Evaluate(t);
+            rb.AddForce(rb.transform.up * boost * boostPercent * scaleT);
 
-        InputAction flapAction = playerController.playerInput.actions.FindAction("Spring", false);
-        return flapAction != null && flapAction.WasPressedThisFrame();
+            yield return new WaitForFixedUpdate();
+        }
     }
+    private void ApplyBoost(float boostPercent)
+    {
+
+
+        rb.AddForce(rb.transform.up * boost * boostPercent, ForceMode.Impulse);
+
+    }
+
+
+
 
     private void OnDisable()
     {
@@ -119,6 +148,7 @@ public class WaterPhysics : MonoBehaviour
         rb.angularDamping = originalAngularDampening;
         rb.linearDamping = originalLinearDampening;
         playerController.airDensity = originalAirDensity;
+
     }
 
 }

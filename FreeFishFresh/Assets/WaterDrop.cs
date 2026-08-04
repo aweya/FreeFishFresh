@@ -20,5 +20,6 @@ public class WaterDrop : MonoBehaviour
             return;
 
         waterPhysics.isWet = isWet;
+        waterPhysics.isFirstBoost = isWet;
     }
 }

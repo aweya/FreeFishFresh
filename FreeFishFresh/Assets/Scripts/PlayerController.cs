@@ -217,8 +217,8 @@ public class PlayerController : MonoBehaviour
         Wings.localScale = new Vector3(originalXScale, originalYScale, wingInput * 10);
 
 
-        //RudderNutrolizer();
-        AeroRudder();
+        RudderNutrolizer();
+        // AeroRudder();
 
         Aerodynamics();
         //new jump
@@ -253,11 +253,11 @@ public class PlayerController : MonoBehaviour
         if (wingInput > 0.2)
         {
             //with rudder
-            //  transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
+            transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
             //no rudder
-            transform.Rotate(trueYaw * invertYaw, -trueRudder, 0);
-            float rudderAngle = 50;
-            rudderTransform.localRotation = Quaternion.Euler(0f, 0f, -trueRoll * rudderAngle);
+            // transform.Rotate(trueYaw * invertYaw, -trueRudder, 0);
+            // float rudderAngle = 50;
+            // rudderTransform.localRotation = Quaternion.Euler(0f, 0f, -trueRoll * rudderAngle);
 
         }
         else

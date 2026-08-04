@@ -19,6 +19,7 @@ public class HUDManager : MonoBehaviour
     [Header("Water HUD")]
     public Color waterChargingColor = new Color(0.2f, 0.75f, 1f, 0.65f);
     public Color waterReadyColor = new Color(0.4f, 1f, 0.9f, 1f);
+    public AnimationCurve boostCurve;
 
     [Header("Tachometer")]
     public float minSpeed = 0f;
@@ -51,12 +52,13 @@ public class HUDManager : MonoBehaviour
         if (waterPhysics == null)
             return;
 
-        bool showWaterHud = waterPhysics.isWet;
+        bool showWaterHud = waterPhysics.isWet && !waterPhysics.isFirstBoost;
 
         if (outerCircle != null)
         {
+            float scale = boostCurve.Evaluate(waterPhysics.BoostCooldownProgress);
             outerCircle.enabled = showWaterHud;
-            outerCircle.rectTransform.localScale = new Vector3(1, 1, 1) * ((1.5f - waterPhysics.BoostCooldownProgress));
+            outerCircle.rectTransform.localScale = new Vector3(1, 1, 1) * scale;
             //outerCircle.color = waterPhysics.IsBoostReady ? waterReadyColor : waterChargingColor;
         }
 
