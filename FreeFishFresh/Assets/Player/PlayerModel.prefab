@@ -1,5 +1,113 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &419254435025289264
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 7390642404007147834}
+  - component: {fileID: 9149870275309465702}
+  - component: {fileID: 7852536004988631656}
+  - component: {fileID: 8316293765292662229}
+  m_Layer: 0
+  m_Name: Rudder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &7390642404007147834
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419254435025289264}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -2.139, z: 0}
+  m_LocalScale: {x: 0.38696128, y: 0.61090505, z: 8.542565}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 829899933889301130}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!33 &9149870275309465702
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419254435025289264}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &7852536004988631656
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419254435025289264}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_StaticShadowCaster: 0
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
+  m_RayTracingAccelStructBuildFlagsOverride: 0
+  m_RayTracingAccelStructBuildFlags: 1
+  m_SmallMeshCulling: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 31321ba15b8f8eb4c954353edc038b1d, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_ReceiveGI: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
+--- !u!65 &8316293765292662229
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 419254435025289264}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 3
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1504952770515090585
 GameObject:
   m_ObjectHideFlags: 0
@@ -474,6 +582,7 @@ GameObject:
   m_Component:
   - component: {fileID: 829899933889301130}
   - component: {fileID: 350176110568649396}
+  - component: {fileID: 1310635542792244622}
   - component: {fileID: 1277431668526201349}
   - component: {fileID: 1609565075682932285}
   - component: {fileID: 8545828380120767215}
@@ -513,6 +622,7 @@ Transform:
   - {fileID: 2209398050870150567}
   - {fileID: 5082215498297002516}
   - {fileID: 6350375280239951110}
+  - {fileID: 7390642404007147834}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &350176110568649396
@@ -559,11 +669,13 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   targetTimescale: 1
+  gamePaused: 0
   invertYaw: 1
-  rotSpeed: 3.23
+  rotSpeed: 3
   airDensity: 1.12
-  area: 54.3
-  dragModifier: 0.5
+  area: 50.2
+  rudderArea: 0.5
+  dragModifier: 0.67
   liftCurve:
     serializedVersion: 2
     m_Curve:
@@ -693,11 +805,84 @@ MonoBehaviour:
     m_PreInfinity: 0
     m_PostInfinity: 2
     m_RotationOrder: 4
+  rudderLiftCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: -50.062237
+      value: -0.24163674
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: -30.58024
+      value: -0.5028851
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.036555007
+      value: -0.0024447618
+      inSlope: 0.03370954
+      outSlope: 0.03370954
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.23840243
+      outWeight: 0.31873032
+    - serializedVersion: 3
+      time: 30.113644
+      value: 0.48783004
+      inSlope: -0.00053679757
+      outSlope: -0.00053679757
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.19648544
+      outWeight: 0.2679212
+    - serializedVersion: 3
+      time: 60.275097
+      value: 0.17744713
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  rudderDragCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0.0031151175
+      value: -0.0017225742
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1.0031152
+      value: -0.0017225742
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   Wings: {fileID: 2209398050870150567}
+  rudderTransform: {fileID: 7390642404007147834}
   playerInput: {fileID: 3606583397542080988}
-  liftMult: 0
-  dragMult: 1.6
-  sideLift: 0
   rudderStabalisation: 0.4
   pitchStabalisation: 0
   maxControlSpeed: 30
@@ -726,7 +911,7 @@ MonoBehaviour:
   - {fileID: 656919100383297194}
   - {fileID: 1545853064272028545}
   - {fileID: 1000716603609749092}
-  boostForce: 2750
+  boostForce: 2653
   bounceForceMultiplier: 4
   debugSpeed: 80
   rollInput: 0
@@ -748,6 +933,23 @@ MonoBehaviour:
   sideLiftDirection: {x: 0, y: 0, z: 0}
   debugArrowScale: 0.1
   arrowOffset: {x: 0, y: 0, z: 0}
+--- !u!114 &1310635542792244622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4854454022602634117}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4c5acee6f77c214ea6a8cef1e51d08d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerController: {fileID: 350176110568649396}
+  isWet: 0
+  linearWaterDampening: 4
+  angularWaterDampening: 8
+  floatingForce: 2
 --- !u!114 &1277431668526201349
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -763,7 +965,7 @@ MonoBehaviour:
   glideCam: {fileID: 0}
   pogoCam: {fileID: 0}
   BaseFov: 90
-  FovMultilier: 0.05
+  FovMultilier: 0.01
   maxFov: 122.5
 --- !u!54 &1609565075682932285
 Rigidbody:

@@ -80,7 +80,7 @@ public class PlayerController : MonoBehaviour
     public float yawInput;
     public float wingInput;
     public int resetInput;
-    public int springInput;
+    public float springInput;
     public float boostInput;
     private InputAction rollAction;
     private InputAction rudderAction;
@@ -142,7 +142,6 @@ public class PlayerController : MonoBehaviour
         springAction = playerInput.actions["Spring"];
         ESCAction = playerInput.actions["Menu"];
         boostAction = playerInput.actions[("Boost")];
-
     }
 
     void Update()
@@ -155,6 +154,7 @@ public class PlayerController : MonoBehaviour
         rudderInput = rudderAction.ReadValue<float>();
         wingInput = wingAction.ReadValue<float>();
         boostInput = boostAction.ReadValue<float>();
+        springInput = springAction.ReadValue<float>();
 
         if (resetAction.WasPressedThisFrame())
         {

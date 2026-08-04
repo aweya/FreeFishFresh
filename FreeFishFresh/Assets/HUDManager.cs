@@ -2,14 +2,23 @@ using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
 
+
 public class HUDManager : MonoBehaviour
 {
     public LevelCheckPoints levelCheckPoints;
     public PlayerController playerController;
+    public WaterPhysics waterPhysics;
 
     public TMP_Text timerText;
     public TMP_Text statusText;
     public Image tachoNadel;
+    public Image innerCircle;
+    public Image outerCircle;
+    public TMP_Text waterBoostText;
+
+    [Header("Water HUD")]
+    public Color waterChargingColor = new Color(0.2f, 0.75f, 1f, 0.65f);
+    public Color waterReadyColor = new Color(0.4f, 1f, 0.9f, 1f);
 
     [Header("Tachometer")]
     public float minSpeed = 0f;
@@ -22,7 +31,10 @@ public class HUDManager : MonoBehaviour
 
     private void Start()
     {
-        CreateTachometerLabels();
+        if (waterPhysics == null && playerController != null)
+            waterPhysics = playerController.GetComponent<WaterPhysics>();
+
+        // CreateTachometerLabels();
     }
 
     void Update()
@@ -31,9 +43,37 @@ public class HUDManager : MonoBehaviour
 
         statusText.text = levelCheckPoints.StatusMessage;
 
-        UpdateTachometer();
+        WaterHud();
     }
 
+    private void WaterHud()
+    {
+        if (waterPhysics == null)
+            return;
+
+        bool showWaterHud = waterPhysics.isWet;
+
+        if (outerCircle != null)
+        {
+            outerCircle.enabled = showWaterHud;
+            outerCircle.rectTransform.localScale = new Vector3(1, 1, 1) * ((1.5f - waterPhysics.BoostCooldownProgress));
+            //outerCircle.color = waterPhysics.IsBoostReady ? waterReadyColor : waterChargingColor;
+        }
+
+        if (innerCircle != null)
+        {
+            innerCircle.enabled = showWaterHud;
+            //innerCircle.color = waterPhysics.IsBoostReady ? waterReadyColor : waterChargingColor;
+        }
+
+        if (waterBoostText != null)
+        {
+            waterBoostText.gameObject.SetActive(showWaterHud);
+            waterBoostText.text = (waterPhysics.BoostCooldownProgress * 100f).ToString("0") + "%";
+
+        }
+
+    }
     private void UpdateTachometer()
     {
         if (playerController == null || tachoNadel == null)
