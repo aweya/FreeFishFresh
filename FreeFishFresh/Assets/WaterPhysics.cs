@@ -18,6 +18,7 @@ public class WaterPhysics : MonoBehaviour
     public AnimationCurve boostApplicationCurve;
     public float waterAirDensity = 2.5f; // like fukin sirup it up
     public bool isFirstBoost = true;
+    [HideInInspector] public float boostPercent;
 
 
     public float BoostCooldownProgress;
@@ -95,8 +96,8 @@ public class WaterPhysics : MonoBehaviour
         if (playerController.springInput > 0.2 && isWet)
         {
 
-            //ApplyBoost(1);
-            StartCoroutine(BoostCorutine(1));
+            ApplyBoost(1);
+            //StartCoroutine(BoostCorutine(1));
             boostTimer = boostCooldown;
             isFirstBoost = false;
         }
@@ -113,7 +114,7 @@ public class WaterPhysics : MonoBehaviour
         }
         if (playerController.springInput > 0.2 && isWet)
         {
-            float boostPercent;
+
             boostPercent = boostRewardCurve.Evaluate(BoostCooldownProgress);
             ApplyBoost(boostPercent);
             boostTimer = boostCooldown;

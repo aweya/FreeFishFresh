@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
 
 public class HUDManager : MonoBehaviour
@@ -53,18 +54,27 @@ public class HUDManager : MonoBehaviour
             return;
 
         bool showWaterHud = waterPhysics.isWet && !waterPhysics.isFirstBoost;
-
+        float progress = waterPhysics.BoostCooldownProgress;
         if (outerCircle != null)
         {
+
             float scale = boostCurve.Evaluate(waterPhysics.BoostCooldownProgress);
             outerCircle.enabled = showWaterHud;
             outerCircle.rectTransform.localScale = new Vector3(1, 1, 1) * scale;
-            //outerCircle.color = waterPhysics.IsBoostReady ? waterReadyColor : waterChargingColor;
+
+            Color color = Color.Lerp(waterChargingColor, waterReadyColor, progress);
+
+            color.a = progress; // fade with cooldown
+            outerCircle.color = color;
         }
 
         if (innerCircle != null)
         {
             innerCircle.enabled = showWaterHud;
+            Color color = Color.Lerp(waterChargingColor, waterReadyColor, progress);
+
+            color.a = progress; // fade with cooldown
+            innerCircle.color = color;
             //innerCircle.color = waterPhysics.IsBoostReady ? waterReadyColor : waterChargingColor;
         }
 
@@ -76,6 +86,7 @@ public class HUDManager : MonoBehaviour
         }
 
     }
+
     private void UpdateTachometer()
     {
         if (playerController == null || tachoNadel == null)

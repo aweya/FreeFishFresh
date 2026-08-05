@@ -100,6 +100,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9071cb6810f925a479dda8f1bc2667b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  waterSplashEntry: {fileID: 3323387954473017891, guid: 0b912e9003fba894faa88cf964a6fb8a, type: 3}
+  waterSplashExit: {fileID: 8585649807550039280, guid: 224c4574d4d272a4b92df19ede61b338, type: 3}
 --- !u!136 &7963850806450655958
 CapsuleCollider:
   m_ObjectHideFlags: 0

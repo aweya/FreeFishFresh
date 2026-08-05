@@ -2039,14 +2039,41 @@ MonoBehaviour:
   timerText: {fileID: 8102586329137479275}
   statusText: {fileID: 2246348607779137164}
   tachoNadel: {fileID: 3819456735735055619}
-  innerCircle: {fileID: 0}
-  outerCircle: {fileID: 0}
-  waterBoostText: {fileID: 0}
+  innerCircle: {fileID: 8674267196436285078}
+  outerCircle: {fileID: 6245501050519503373}
+  waterBoostText: {fileID: 8551602418667882079}
   waterChargingColor: {r: 0.2, g: 0.75, b: 1, a: 0.65}
   waterReadyColor: {r: 0.4, g: 1, b: 0.9, a: 1}
   boostCurve:
     serializedVersion: 2
-    m_Curve: []
+    m_Curve:
+    - serializedVersion: 3
+      time: -0.0009303987
+      value: 2.0001347
+      inSlope: -0.000019214745
+      outSlope: -0.000019214745
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.22138539
+    - serializedVersion: 3
+      time: 0.5034974
+      value: 0.9963466
+      inSlope: -2.1581655
+      outSlope: -2.1581655
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2557001
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9964027
+      value: 0.009442475
+      inSlope: -1.0013926
+      outSlope: -1.0013926
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.2734286
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
