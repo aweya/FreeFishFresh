@@ -30,6 +30,7 @@ public class PlayerController : MonoBehaviour
     public float airDensity = 1.225f;
     public float area = 1f;
     public float rudderArea = 4f;
+    public float bodyArea = 4f;
     public float dragModifier = 0.5f;
     public AnimationCurve liftCurve;   // CL vs angle of attack (degrees)
     public AnimationCurve dragCurve;   // CD vs angle of attack (degrees)
@@ -38,6 +39,7 @@ public class PlayerController : MonoBehaviour
 
     public Transform Wings;
     public Transform rudderTransform;
+    public Transform body;
     public PlayerInput playerInput;
     private float originalXScale;
     private float originalYScale;
@@ -217,8 +219,9 @@ public class PlayerController : MonoBehaviour
         Wings.localScale = new Vector3(originalXScale, originalYScale, wingInput * 10);
 
 
-        RudderNutrolizer();
-        // AeroRudder();
+        // RudderNutrolizer();
+        AeroAtTransform(rudderTransform, rudderArea);
+        AeroAtTransform(body, bodyArea);
 
         Aerodynamics();
         //new jump
@@ -253,11 +256,11 @@ public class PlayerController : MonoBehaviour
         if (wingInput > 0.2)
         {
             //with rudder
-            transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
+            //transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
             //no rudder
-            // transform.Rotate(trueYaw * invertYaw, -trueRudder, 0);
-            // float rudderAngle = 50;
-            // rudderTransform.localRotation = Quaternion.Euler(0f, 0f, -trueRoll * rudderAngle);
+            transform.Rotate(trueYaw * invertYaw, -trueRudder, 0);
+            float rudderAngle = 50;
+            rudderTransform.localRotation = Quaternion.Euler(0f, 0f, trueRoll * rudderAngle);
 
         }
         else
@@ -308,7 +311,7 @@ public class PlayerController : MonoBehaviour
 
     }
 
-    private void AeroRudder()
+    private void AeroAtTransform(Transform aeroSurface, float area)
     {
         // air relative to the craft, world space (no wind yet)
         Vector3 worldFlowVelocity = -rb.linearVelocity;
@@ -316,7 +319,7 @@ public class PlayerController : MonoBehaviour
         // once you go per-surface: worldFlowVelocity -= Vector3.Cross(rb.angularVelocity, transform.position - rb.worldCenterOfMass);
         // Debug.DrawRay(transform.position, worldFlowVelocity, Color.red);
 
-        Vector3 localFlowVelocity = rudderTransform.InverseTransformDirection(worldFlowVelocity);
+        Vector3 localFlowVelocity = aeroSurface.InverseTransformDirection(worldFlowVelocity);
 
         // your axes: Y = nose (chordwise), x = cockpit (normal/lift), z = right (spanwise)
         // kill the spanwise component - a 2D wing model doesn't use it
@@ -331,17 +334,18 @@ public class PlayerController : MonoBehaviour
         float liftCoefficient = rudderLiftCurve.Evaluate(angleOfAttack * Mathf.Rad2Deg);
         float dragCoefficient = rudderDragCurve.Evaluate(angleOfAttack * Mathf.Rad2Deg);
 
-        Vector3 dragDirection = rudderTransform.TransformDirection(localFlowVelocity.normalized);
-        Vector3 liftDirection = Vector3.Cross(dragDirection, rudderTransform.forward); // right = spanwise
+        Vector3 dragDirection = aeroSurface.TransformDirection(localFlowVelocity.normalized);
+        Vector3 liftDirection = Vector3.Cross(dragDirection, aeroSurface.forward); // right = spanwise
 
-        Vector3 rudderLift = liftDirection * liftCoefficient * dynamicPressure * rudderArea; // you already have `lift` as a field for the gizmo
-        Vector3 drag = dragDirection * dragCoefficient * dynamicPressure * rudderArea * dragModifier;
+        Vector3 rudderLift = liftDirection * liftCoefficient * dynamicPressure * area; // you already have `lift` as a field for the gizmo
+        //Vector3 drag = dragDirection * dragCoefficient * dynamicPressure * area * dragModifier;
+        Vector3 drag = Vector3.zero;
 
         Vector3 combinedForces = (rudderLift + drag) * wingInput;
 
-        rb.AddForceAtPosition(combinedForces, rudderTransform.position); // plain AddForce, not AddForceAtPosition — keeps this translation-only until you add torque on purpose
+        rb.AddForceAtPosition(combinedForces, aeroSurface.position); // plain AddForce, not AddForceAtPosition — keeps this translation-only until you add torque on purpose
 
-        Debug.DrawRay(rudderTransform.position, rudderLift, Color.green);
+        Debug.DrawRay(aeroSurface.position, rudderLift, Color.green);
 
     }
 

@@ -1,5 +1,13 @@
 {
   "dependencies": {
+    "com.jimmycushnie.noisynodes": {
+      "version": "file:C:/Users/lukas/Downloads/Noisy-Nodes-master/Noisy-Nodes-master",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.unity.shadergraph": "7.1.8"
+      }
+    },
     "com.unity.ai.navigation": {
       "version": "2.0.5",
       "depth": 0,
