@@ -940,6 +940,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
       value: Resume
       objectReference: {fileID: 0}
+    - target: {fileID: 4191432089116962245, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8184330589647967080, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
@@ -1461,7 +1465,7 @@ MonoBehaviour:
   HorizontalAxis:
     Value: 0
     Center: 80.016975
-    Range: {x: -180, y: 180}
+    Range: {x: -1241.3, y: 1278.3}
     Wrap: 0
     Recentering:
       Enabled: 0
@@ -4926,7 +4930,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &1463224449
 Transform:
   m_ObjectHideFlags: 0
@@ -6492,6 +6496,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: invertYaw
+      value: -1
+      objectReference: {fileID: 0}
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: resetPoint
       value: 

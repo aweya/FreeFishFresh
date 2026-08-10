@@ -36,6 +36,8 @@ public class PlayerController : MonoBehaviour
     public AnimationCurve dragCurve;   // CD vs angle of attack (degrees)
     public AnimationCurve rudderLiftCurve;
     public AnimationCurve rudderDragCurve;
+    public float rudderAngle = 50;
+    public float rudderSpeed = 1f;
 
     public Transform Wings;
     public Transform rudderTransform;
@@ -255,17 +257,24 @@ public class PlayerController : MonoBehaviour
         // charcontrol lol
         if (wingInput > 0.2)
         {
+            //flight contol 
             //with rudder
             //transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
             //no rudder
             transform.Rotate(trueYaw * invertYaw, -trueRudder, 0);
-            float rudderAngle = 50;
-            rudderTransform.localRotation = Quaternion.Euler(0f, 0f, trueRoll * rudderAngle);
+
+            Quaternion targetRudderRotation = Quaternion.Euler(0f, 0f, trueRoll * rudderAngle);
+            rudderTransform.localRotation = Quaternion.RotateTowards(
+                rudderTransform.localRotation,
+                targetRudderRotation,
+                rudderSpeed * Time.fixedDeltaTime
+            );
 
         }
         else
         {
-            ApplyCameraRelativeRotation(trueYaw * invertYaw, trueRoll, trueRudder);
+            //pogo controll
+            ApplyCameraRelativeRotation(trueYaw * invertYaw, trueRoll * invertYaw, trueRudder);
 
         }
 
@@ -350,30 +359,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void RudderNutrolizer()
-    {
-        // ---- Rudder / pitch neutralizer (weathervaning) ----
-        // Nudges the nose (transform.up) back toward the direction the glider is
-        // actually moving (rb.linearVelocity), like a real fin/rudder would.
-        if (speed > 0.5f) // skip when basically stationary, avoids jitter on the pogo
-        {
-            Vector3 flightDirection = rb.linearVelocity.normalized;
 
-            // Angle to swing the nose toward flightDirection, measured around the
-            // cockpit axis (transform.forward) -> this is the yaw/rudder correction.
-            float yawError = Vector3.SignedAngle(transform.up, flightDirection, transform.forward);
-
-            // Same idea measured around the wing axis (transform.right) -> pitch correction.
-            float pitchError = Vector3.SignedAngle(transform.up, flightDirection, transform.right);
-
-            // Only correct a fraction of the error each physics step. More wing out =
-            // more weathervane authority (matches your original intent).
-            float yawCorrection = yawError * wingInput * rudderStabalisation * Time.fixedDeltaTime;
-            float pitchCorrection = pitchError * wingInput * pitchStabalisation * Time.fixedDeltaTime;
-
-            transform.Rotate(pitchCorrection, 0f, yawCorrection, Space.Self);
-        }
-    }
 
 
 
@@ -539,7 +525,30 @@ public class PlayerController : MonoBehaviour
 
 
     // ----------------unsused stuff
+    private void RudderNutrolizer()
+    {
+        // ---- Rudder / pitch neutralizer (weathervaning) ----
+        // Nudges the nose (transform.up) back toward the direction the glider is
+        // actually moving (rb.linearVelocity), like a real fin/rudder would.
+        if (speed > 0.5f) // skip when basically stationary, avoids jitter on the pogo
+        {
+            Vector3 flightDirection = rb.linearVelocity.normalized;
 
+            // Angle to swing the nose toward flightDirection, measured around the
+            // cockpit axis (transform.forward) -> this is the yaw/rudder correction.
+            float yawError = Vector3.SignedAngle(transform.up, flightDirection, transform.forward);
+
+            // Same idea measured around the wing axis (transform.right) -> pitch correction.
+            float pitchError = Vector3.SignedAngle(transform.up, flightDirection, transform.right);
+
+            // Only correct a fraction of the error each physics step. More wing out =
+            // more weathervane authority (matches your original intent).
+            float yawCorrection = yawError * wingInput * rudderStabalisation * Time.fixedDeltaTime;
+            float pitchCorrection = pitchError * wingInput * pitchStabalisation * Time.fixedDeltaTime;
+
+            transform.Rotate(pitchCorrection, 0f, yawCorrection, Space.Self);
+        }
+    }
 
     /*     private void RollTowardsCamera()
         {
