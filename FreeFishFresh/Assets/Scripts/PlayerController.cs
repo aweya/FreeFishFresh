@@ -12,6 +12,10 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform;
     public Transform resetPoint;
 
+
+    [Min(0f)] public float resetPenalty = 5f;
+    public event System.Action<float> ResetPerformed;
+
     public float speed;
 
     [Header("Control")]
@@ -22,7 +26,7 @@ public class PlayerController : MonoBehaviour
     public AnimationCurve slowMoCurve;
     public float targetTimescale = 1f;
     public bool gamePaused = false;
-    public int invertYaw = -1;
+    public int invertPitch = -1;
 
     public float rotSpeed = 3f;
 
@@ -132,6 +136,8 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        ApplyInvertYawSetting(GameSettings.Instance.InvertYaw);
+
         //resetPoint.position = transform.position;
         originalRotationPoint.position = rotationPoint.position;
         //define Inputs
@@ -146,6 +152,23 @@ public class PlayerController : MonoBehaviour
         springAction = playerInput.actions["Spring"];
         ESCAction = playerInput.actions["Menu"];
         boostAction = playerInput.actions[("Boost")];
+    }
+
+    private void OnEnable()
+    {
+        GameSettings.Instance.InvertYawChanged += ApplyInvertYawSetting;
+        ApplyInvertYawSetting(GameSettings.Instance.InvertYaw);
+    }
+
+    private void OnDisable()
+    {
+        GameSettings.Instance.InvertYawChanged -= ApplyInvertYawSetting;
+    }
+
+    private void ApplyInvertYawSetting(bool shouldInvertYaw)
+    {
+        // This project currently uses invertPitch as the sign for its yaw input.
+        invertPitch = shouldInvertYaw ? -1 : 1;
     }
 
     void Update()
@@ -261,7 +284,7 @@ public class PlayerController : MonoBehaviour
             //with rudder
             //transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
             //no rudder
-            transform.Rotate(trueYaw * invertYaw, -trueRudder, 0);
+            transform.Rotate(trueYaw * invertPitch, -trueRudder, 0);
 
             Quaternion targetRudderRotation = Quaternion.Euler(0f, 0f, trueRoll * rudderAngle);
             rudderTransform.localRotation = Quaternion.RotateTowards(
@@ -274,7 +297,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             //pogo controll
-            ApplyCameraRelativeRotation(trueYaw * invertYaw, trueRoll * invertYaw, trueRudder);
+            ApplyCameraRelativeRotation(trueYaw * invertPitch, trueRoll * invertPitch, trueRudder);
 
         }
 
@@ -508,19 +531,16 @@ public class PlayerController : MonoBehaviour
 
     public void ResetGlider()
     {
-        //reset time 
         targetTimescale = 1f;
 
-
-        // Reset position and velocity
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
-        rb.transform.position = resetPoint.position; // Adjust to your desired reset position
-        rb.transform.rotation = resetPoint.rotation; // Reset orientation
+        rb.transform.position = resetPoint.position;
+        rb.transform.rotation = resetPoint.rotation;
 
         Physics.SyncTransforms();
+        ResetPerformed?.Invoke(resetPenalty);
         Debug.Log("Glider Reset");
-
     }
 
 

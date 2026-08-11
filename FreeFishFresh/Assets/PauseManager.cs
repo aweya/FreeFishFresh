@@ -16,6 +16,10 @@ public class PauseMenu : MonoBehaviour
     public GameObject pauseMainFirstButton;
     public GameObject debugMenuFirstButton;
     public GameObject checkpointMenuFirstButton;
+
+    [Header("Settings")]
+    public Button invertPitchButton;
+    public TMP_Text invertYawButtonLabel;
     [Header("Chekpoint Buttons")]
 
 
@@ -34,6 +38,13 @@ public class PauseMenu : MonoBehaviour
     {
         Cursor.visible = true;
         pauseMenuRoot.SetActive(paused);
+
+        EnsureInvertYawButton();
+
+        if (invertPitchButton != null)
+            invertPitchButton.onClick.AddListener(ToggleInvertYawSetting);
+
+        RefreshSettingsLabel();
     }
 
     void Update()
@@ -140,6 +151,42 @@ public class PauseMenu : MonoBehaviour
     public void BackToDebug()
     {
         ShowMenu(debugMenu, debugMenuFirstButton);
+    }
+
+    public void ToggleInvertYawSetting()
+    {
+        GameSettings.Instance.ToggleInvertYaw();
+        RefreshSettingsLabel();
+    }
+
+    private void RefreshSettingsLabel()
+    {
+        if (invertYawButtonLabel != null)
+            invertYawButtonLabel.text = "Invert Yaw: " + (GameSettings.Instance.InvertYaw ? "ON" : "OFF");
+    }
+
+    private void EnsureInvertYawButton()
+    {
+        if (invertPitchButton != null || pauseMain == null)
+            return;
+
+        Button template = pauseMain.GetComponentInChildren<Button>(true);
+        if (template == null)
+            return;
+
+        GameObject buttonObject = Instantiate(template.gameObject, template.transform.parent);
+        buttonObject.name = "InvertYawButton";
+
+        invertPitchButton = buttonObject.GetComponent<Button>();
+        invertPitchButton.onClick = new Button.ButtonClickedEvent();
+        invertYawButtonLabel = buttonObject.GetComponentInChildren<TMP_Text>(true);
+
+        RectTransform buttonTransform = buttonObject.GetComponent<RectTransform>();
+        float lowestButtonPosition = template.GetComponent<RectTransform>().anchoredPosition.y;
+        foreach (Button button in pauseMain.GetComponentsInChildren<Button>(true))
+            lowestButtonPosition = Mathf.Min(lowestButtonPosition, button.GetComponent<RectTransform>().anchoredPosition.y);
+
+        buttonTransform.anchoredPosition = new Vector2(0f, lowestButtonPosition - 92f);
     }
 
 

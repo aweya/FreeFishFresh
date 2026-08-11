@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using System.Collections;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 
@@ -16,6 +17,11 @@ public class HUDManager : MonoBehaviour
     public Image innerCircle;
     public Image outerCircle;
     public TMP_Text waterBoostText;
+
+    [Header("Reset Penalty UI")]
+    public TMP_Text resetPenaltyText;
+    [Min(0.1f)] public float resetPenaltyFadeDuration = 1f;
+    private Coroutine resetPenaltyRoutine;
 
     [Header("Water HUD")]
     public Color waterChargingColor = new Color(0.2f, 0.75f, 1f, 0.65f);
@@ -36,7 +42,11 @@ public class HUDManager : MonoBehaviour
         if (waterPhysics == null && playerController != null)
             waterPhysics = playerController.GetComponent<WaterPhysics>();
 
-        // CreateTachometerLabels();
+        if (playerController != null)
+            playerController.ResetPerformed += HandlePlayerReset;
+
+        if (resetPenaltyText != null)
+            resetPenaltyText.gameObject.SetActive(false);
     }
 
     void Update()
@@ -48,6 +58,46 @@ public class HUDManager : MonoBehaviour
         WaterHud();
     }
 
+    private void HandlePlayerReset(float penalty)
+    {
+        if (levelCheckPoints != null)
+            levelCheckPoints.raceTimer += penalty;
+
+        if (resetPenaltyText == null)
+            return;
+
+        if (resetPenaltyRoutine != null)
+            StopCoroutine(resetPenaltyRoutine);
+
+        resetPenaltyText.text = $"+{penalty:0.##}";
+        resetPenaltyText.gameObject.SetActive(true);
+        resetPenaltyRoutine = StartCoroutine(FadeResetPenalty());
+    }
+
+    private IEnumerator FadeResetPenalty()
+    {
+        Color color = resetPenaltyText.color;
+        color.a = 1f;
+        resetPenaltyText.color = color;
+
+        float elapsed = 0f;
+        while (elapsed < resetPenaltyFadeDuration)
+        {
+            elapsed += Time.deltaTime;
+            color.a = 1f - Mathf.Clamp01(elapsed / resetPenaltyFadeDuration);
+            resetPenaltyText.color = color;
+            yield return null;
+        }
+
+        resetPenaltyText.gameObject.SetActive(false);
+        resetPenaltyRoutine = null;
+    }
+
+    private void OnDestroy()
+    {
+        if (playerController != null)
+            playerController.ResetPerformed -= HandlePlayerReset;
+    }
     private void WaterHud()
     {
         if (waterPhysics == null)
