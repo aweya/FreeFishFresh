@@ -6463,10 +6463,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 2101212362}
     - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
-      propertyPath: compression
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 518734722}

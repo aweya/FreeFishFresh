@@ -468,8 +468,10 @@ public class PlayerController : MonoBehaviour
                 float offset = restLenght - springLenght;
                 //calc delta (spring velocity)
                 float springVelocity = Vector3.Dot(springDirection, rb.GetPointVelocity(rayPos.position));
+                //make spring nonlinear
+                float nonlinearfactor = springScaleCurve.Evaluate(springCompression);
                 //calc springForce
-                float springForce = (offset * springStrenght) - (springVelocity * springDamping);
+                float springForce = (offset * springStrenght * nonlinearfactor) - (springVelocity * springDamping);
 
                 //--slomoeffect--
                 if (gamePaused)
