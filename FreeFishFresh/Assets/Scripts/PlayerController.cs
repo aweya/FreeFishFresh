@@ -54,6 +54,7 @@ public class PlayerController : MonoBehaviour
     public float maxControlSpeed = 30f; // speed above this stops adding extra control authority
 
     [Header("Spring Parameters")]
+    public AnimationCurve springScaleCurve;
     public float originalrestlenght = 1.1f;
     public float minLenght = 1f;
     public float restLenght = 1.1f;
@@ -67,6 +68,12 @@ public class PlayerController : MonoBehaviour
     public float pogoFriction = 0.9f;
     public float maxLeanGrip = 0.6f; // how much sideways "lean" force the tip can grip before it just slips - higher = more aggressive steering
 
+    [Header("Spring Animation")]
+    [Range(0f, 1f)] public float springCompression;
+    [Tooltip("The actual spring length at which animation compression reaches 1. This is the physical bottom-out, not the player pull-in length.")]
+    [Min(0f)] public float fullyCompressedSpringLength = 0.1f;
+    private float currentSpringLength;
+
     public Transform pogoTip;
     public bool isTipGrounded = false;
     public Transform rayCenter;
@@ -79,6 +86,9 @@ public class PlayerController : MonoBehaviour
     public float bounceForceMultiplier = 3;
     public float debugSpeed = 80.0f;
 
+
+    [Header("Animation")]
+    public float compression;
 
 
     //inputs
@@ -117,6 +127,7 @@ public class PlayerController : MonoBehaviour
     {
         springStrenght = originalSpringStrenght;
         restLenght = originalrestlenght;
+        currentSpringLength = restLenght;
         rb = GetComponent<Rigidbody>();
 
         // Find the Wings object
@@ -252,6 +263,7 @@ public class PlayerController : MonoBehaviour
         //new jump
 
         Suspension(rayCenter, pogoTip);
+        UpdateSpringCompression();
 
         //Boost
         Boost();
@@ -297,7 +309,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             //pogo controll
-            ApplyCameraRelativeRotation(trueYaw * invertPitch, trueRoll * invertPitch, trueRudder);
+            ApplyCameraRelativeRotation(trueYaw * invertPitch, trueRoll * invertPitch, trueRudder * 2);
 
         }
 
@@ -445,10 +457,12 @@ public class PlayerController : MonoBehaviour
 
             if (hit.collider.isTrigger == false)
             {
+
                 //----Suspension----
                 isTipGrounded = true;
                 //calc srinng lenght
                 float springLenght = hit.distance;
+                currentSpringLength = springLenght;
                 Vector3 springDirection = transform.up;
                 //calc Spring offset
                 float offset = restLenght - springLenght;
@@ -513,11 +527,22 @@ public class PlayerController : MonoBehaviour
         else
         {
             isTipGrounded = false;
+            currentSpringLength = restLenght;
             // move tip
             pogoTip.transform.position = rayPos.position - (transform.up * restLenght);
             //Ray gismo for supesion
             Debug.DrawRay(rayPos.position, -transform.up * restLenght, Color.red);
         }
+    }
+
+    private void UpdateSpringCompression()
+    {
+        // Uses the actual spring length. Player pull-in changes that length slightly,
+        // but only a real physical bottom-out reaches 1.
+        springCompression = Mathf.InverseLerp(
+            originalrestlenght,
+            fullyCompressedSpringLength,
+            currentSpringLength);
     }
 
 
