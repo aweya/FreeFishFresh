@@ -6365,6 +6365,38 @@ PrefabInstance:
       propertyPath: cameraTransform
       value: 
       objectReference: {fileID: 518734722}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: springScaleCurve.m_Curve.Array.data[1].time
+      value: 0.8130002
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: springScaleCurve.m_Curve.Array.data[2].time
+      value: 0.9794162
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: springScaleCurve.m_Curve.Array.data[1].value
+      value: 1.0638292
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: springScaleCurve.m_Curve.Array.data[2].value
+      value: 1.9377992
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: springScaleCurve.m_Curve.Array.data[0].inSlope
+      value: 0.008995839
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: springScaleCurve.m_Curve.Array.data[0].outSlope
+      value: 0.008995839
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: springScaleCurve.m_Curve.Array.data[0].outWeight
+      value: 0.076743655
+      objectReference: {fileID: 0}
+    - target: {fileID: 350176110568649396, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
+      propertyPath: springScaleCurve.m_Curve.Array.data[0].tangentMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 829899933889301130, guid: dc0a1490f5897b34a88e70ee75ca0a71, type: 3}
       propertyPath: m_LocalPosition.x
       value: 697.65
