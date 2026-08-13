@@ -480,7 +480,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3765481977405008632}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -1024,13 +1024,13 @@ MonoBehaviour:
       inWeight: 0.09027325
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 1.0007306
-      value: 1.5104533
-      inSlope: 1.5986412
-      outSlope: 1.5986412
+      time: 1.0076938
+      value: 1.8388915
+      inSlope: 5.6439757
+      outSlope: 5.6439757
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.06790803
+      inWeight: 0.19449627
       outWeight: 0.33333334
     m_PreInfinity: 2
     m_PostInfinity: 2
