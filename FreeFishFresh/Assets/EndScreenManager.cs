@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -14,6 +15,7 @@ public class EndScreenManager : MonoBehaviour
     public GameObject firstButton;
 
     public LevelCheckPoints level;
+    private Coroutine selectButtonCoroutine;
 
 
     void Start()
@@ -28,12 +30,25 @@ public class EndScreenManager : MonoBehaviour
         active = true;
         ToggleMenu(active);
 
-
         Cursor.lockState = CursorLockMode.None;
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(firstButton);
+        if (selectButtonCoroutine != null)
+            StopCoroutine(selectButtonCoroutine);
+        selectButtonCoroutine = StartCoroutine(SelectFirstButtonNextFrame());
 
         timeText.text = "Your time was " + finishTime.ToString("F2") + " s";
+    }
+
+    private IEnumerator SelectFirstButtonNextFrame()
+    {
+        // Wait until the end screen and the input module have both processed activation.
+        yield return null;
+
+        selectButtonCoroutine = null;
+        if (!active || firstButton == null || EventSystem.current == null)
+            yield break;
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstButton);
     }
 
     private void ToggleMenu(bool active)

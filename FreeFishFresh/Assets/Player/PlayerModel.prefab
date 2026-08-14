@@ -782,7 +782,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   targetTimescale: 1
   gamePaused: 0
-  invertPitch: -1
+  invertPitch: 1
   rotSpeed: 3
   airDensity: 1.12
   area: 50.2

@@ -6,7 +6,11 @@ using UnityEngine;
 /// </summary>
 public class GameSettings : MonoBehaviour
 {
-    private const string InvertYawKey = "settings.invertYaw";
+    private const string InvertFrontBackKey = "settings.invertFrontBack";
+    private const string InvertLeftRightKey = "settings.invertLeftRight";
+    private const string InvertFlyingUpDownKey = "settings.invertFlyingUpDown";
+    private const string LegacyInvertPitchKey = "settings.invertPitch";
+    private const string LegacyInvertYawKey = "settings.invertYaw";
     private static GameSettings instance;
 
     public static GameSettings Instance
@@ -26,8 +30,11 @@ public class GameSettings : MonoBehaviour
         }
     }
 
-    public bool InvertYaw { get; private set; }
-    public event System.Action<bool> InvertYawChanged;
+    public bool InvertFrontBack { get; private set; }
+    public bool InvertLeftRight { get; private set; }
+    public bool InvertFlyingUpDown { get; private set; }
+
+    public event System.Action SettingsChanged;
 
     private void Awake()
     {
@@ -39,23 +46,46 @@ public class GameSettings : MonoBehaviour
 
         instance = this;
         DontDestroyOnLoad(gameObject);
-        // Preserve the project's existing yaw direction (-1) until a player chooses otherwise.
-        InvertYaw = PlayerPrefs.GetInt(InvertYawKey, 1) == 1;
+        // OFF preserves each scene's authored control directions; ON reverses them.
+        InvertFrontBack = LoadFrontBackSetting();
+        InvertLeftRight = PlayerPrefs.GetInt(InvertLeftRightKey, 0) == 1;
+        InvertFlyingUpDown = PlayerPrefs.GetInt(InvertFlyingUpDownKey, 0) == 1;
     }
 
-    public void ToggleInvertYaw()
+    public void ToggleInvertFrontBack()
     {
-        SetInvertYaw(!InvertYaw);
+        InvertFrontBack = !InvertFrontBack;
+        SaveSetting(InvertFrontBackKey, InvertFrontBack);
     }
 
-    public void SetInvertYaw(bool enabled)
+    public void ToggleInvertLeftRight()
     {
-        if (InvertYaw == enabled)
-            return;
+        InvertLeftRight = !InvertLeftRight;
+        SaveSetting(InvertLeftRightKey, InvertLeftRight);
+    }
 
-        InvertYaw = enabled;
-        PlayerPrefs.SetInt(InvertYawKey, enabled ? 1 : 0);
+    public void ToggleInvertFlyingUpDown()
+    {
+        InvertFlyingUpDown = !InvertFlyingUpDown;
+        SaveSetting(InvertFlyingUpDownKey, InvertFlyingUpDown);
+    }
+
+    private void SaveSetting(string key, bool enabled)
+    {
+        PlayerPrefs.SetInt(key, enabled ? 1 : 0);
         PlayerPrefs.Save();
-        InvertYawChanged?.Invoke(InvertYaw);
+        SettingsChanged?.Invoke();
+    }
+
+    private static bool LoadFrontBackSetting()
+    {
+        if (PlayerPrefs.HasKey(InvertFrontBackKey))
+            return PlayerPrefs.GetInt(InvertFrontBackKey) == 1;
+        if (PlayerPrefs.HasKey(LegacyInvertPitchKey))
+            return PlayerPrefs.GetInt(LegacyInvertPitchKey) != 1;
+        if (PlayerPrefs.HasKey(LegacyInvertYawKey))
+            return PlayerPrefs.GetInt(LegacyInvertYawKey) != 1;
+
+        return false;
     }
 }

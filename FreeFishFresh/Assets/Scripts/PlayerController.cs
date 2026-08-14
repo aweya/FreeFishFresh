@@ -26,7 +26,12 @@ public class PlayerController : MonoBehaviour
     public AnimationCurve slowMoCurve;
     public float targetTimescale = 1f;
     public bool gamePaused = false;
-    public int invertPitch = -1;
+    public int invertPitch = 1;
+    public int invertYaw = 1;
+    public int invertFlyingPitch = 1;
+    private int defaultFrontBackDirection;
+    private int defaultLeftRightDirection;
+    private int defaultFlyingUpDownDirection;
 
     public float rotSpeed = 3f;
 
@@ -86,11 +91,6 @@ public class PlayerController : MonoBehaviour
     public float bounceForceMultiplier = 3;
     public float debugSpeed = 80.0f;
 
-
-    [Header("Animation")]
-    public float compression;
-
-
     //inputs
     [Header("Inputs")]
     public float rollInput;
@@ -113,10 +113,6 @@ public class PlayerController : MonoBehaviour
     public Vector3 sideLiftDirection;
 
     private Rigidbody rb;
-
-    // Debug variables
-    public float debugArrowScale = 10f; // Scale for lift arrow
-    public Vector3 arrowOffset = Vector3.up * 2; // Offset for better visibility
 
     private Vector3 lift; // Store lift force
     private Vector3 airflow; // Store airflow direction
@@ -147,7 +143,10 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
-        ApplyInvertYawSetting(GameSettings.Instance.InvertYaw);
+        defaultFrontBackDirection = DirectionSign(invertPitch, -1);
+        defaultLeftRightDirection = DirectionSign(invertYaw, 1);
+        defaultFlyingUpDownDirection = DirectionSign(invertFlyingPitch, 1);
+        ApplyControlSettings();
 
         //resetPoint.position = transform.position;
         originalRotationPoint.position = rotationPoint.position;
@@ -167,19 +166,41 @@ public class PlayerController : MonoBehaviour
 
     private void OnEnable()
     {
-        GameSettings.Instance.InvertYawChanged += ApplyInvertYawSetting;
-        ApplyInvertYawSetting(GameSettings.Instance.InvertYaw);
+        GameSettings.Instance.SettingsChanged += ApplyControlSettings;
+        ApplyControlSettings();
     }
 
     private void OnDisable()
     {
-        GameSettings.Instance.InvertYawChanged -= ApplyInvertYawSetting;
+        GameSettings.Instance.SettingsChanged -= ApplyControlSettings;
     }
 
-    private void ApplyInvertYawSetting(bool shouldInvertYaw)
+    private void ApplyControlSettings()
     {
-        // This project currently uses invertPitch as the sign for its yaw input.
-        invertPitch = shouldInvertYaw ? -1 : 1;
+        GameSettings settings = GameSettings.Instance;
+        invertPitch = ApplyInversion(defaultFrontBackDirection, settings.InvertFrontBack);
+        invertYaw = ApplyInversion(defaultLeftRightDirection, settings.InvertLeftRight);
+        invertFlyingPitch = ApplyInversion(defaultFlyingUpDownDirection, settings.InvertFlyingUpDown);
+    }
+
+    private static int DirectionSign(int value, int fallback)
+    {
+        if (value == 0)
+            return fallback;
+
+        return value < 0 ? -1 : 1;
+    }
+
+    private static int ApplyInversion(int defaultDirection, bool inverted)
+    {
+        return inverted ? -defaultDirection : defaultDirection;
+    }
+
+    public void SetGamePaused(bool paused)
+    {
+        gamePaused = paused;
+        targetTimescale = paused ? 0f : 1f;
+        Time.timeScale = targetTimescale;
     }
 
     void Update()
@@ -296,7 +317,7 @@ public class PlayerController : MonoBehaviour
             //with rudder
             //transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
             //no rudder
-            transform.Rotate(trueYaw * invertPitch, -trueRudder, 0);
+            transform.Rotate(trueYaw * invertFlyingPitch, -trueRudder, 0);
 
             Quaternion targetRudderRotation = Quaternion.Euler(0f, 0f, trueRoll * rudderAngle);
             rudderTransform.localRotation = Quaternion.RotateTowards(
@@ -309,7 +330,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             //pogo controll
-            ApplyCameraRelativeRotation(trueYaw * invertPitch, trueRoll * invertPitch, trueRudder * 2);
+            ApplyCameraRelativeRotation(trueYaw * invertPitch, trueRoll * invertYaw, trueRudder * 2);
 
         }
 

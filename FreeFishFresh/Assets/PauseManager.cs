@@ -18,8 +18,12 @@ public class PauseMenu : MonoBehaviour
     public GameObject checkpointMenuFirstButton;
 
     [Header("Settings")]
-    public Button invertPitchButton;
-    public TMP_Text invertYawButtonLabel;
+    private Button invertFrontBackButton;
+    private Button invertLeftRightButton;
+    private Button invertFlyingUpDownButton;
+    private TMP_Text invertFrontBackLabel;
+    private TMP_Text invertLeftRightLabel;
+    private TMP_Text invertFlyingUpDownLabel;
     [Header("Chekpoint Buttons")]
 
 
@@ -39,17 +43,15 @@ public class PauseMenu : MonoBehaviour
         Cursor.visible = true;
         pauseMenuRoot.SetActive(paused);
 
-        EnsureInvertYawButton();
-
-        if (invertPitchButton != null)
-            invertPitchButton.onClick.AddListener(ToggleInvertYawSetting);
-
-        RefreshSettingsLabel();
+        FindSettingsButtonsByText();
+        AddSettingsButtonListeners();
+        RefreshSettingsLabels();
     }
 
     void Update()
     {
-        if (playercontroller.ESCAction.WasPressedThisFrame())
+        InputAction menuAction = playercontroller.playerInput.currentActionMap?.FindAction("Menu");
+        if (menuAction != null && menuAction.WasPressedThisFrame())
         {
             TogglePause();
         }
@@ -64,7 +66,7 @@ public class PauseMenu : MonoBehaviour
 
         if (paused)
         {
-            playercontroller.gamePaused = paused;
+            playercontroller.SetGamePaused(true);
 
             playercontroller.playerInput.SwitchCurrentActionMap("UI");
             Cursor.lockState = CursorLockMode.None;
@@ -72,7 +74,7 @@ public class PauseMenu : MonoBehaviour
         }
         else
         {
-            playercontroller.gamePaused = paused;
+            playercontroller.SetGamePaused(false);
 
             playercontroller.playerInput.SwitchCurrentActionMap("Fish");
             Cursor.lockState = CursorLockMode.Locked;
@@ -153,40 +155,80 @@ public class PauseMenu : MonoBehaviour
         ShowMenu(debugMenu, debugMenuFirstButton);
     }
 
-    public void ToggleInvertYawSetting()
+    public void ToggleInvertFrontBackSetting()
     {
-        GameSettings.Instance.ToggleInvertYaw();
-        RefreshSettingsLabel();
+        GameSettings.Instance.ToggleInvertFrontBack();
+        RefreshSettingsLabels();
     }
 
-    private void RefreshSettingsLabel()
+    public void ToggleInvertLeftRightSetting()
     {
-        if (invertYawButtonLabel != null)
-            invertYawButtonLabel.text = "Invert Yaw: " + (GameSettings.Instance.InvertYaw ? "ON" : "OFF");
+        GameSettings.Instance.ToggleInvertLeftRight();
+        RefreshSettingsLabels();
     }
 
-    private void EnsureInvertYawButton()
+    public void ToggleInvertFlyingUpDownSetting()
     {
-        if (invertPitchButton != null || pauseMain == null)
+        GameSettings.Instance.ToggleInvertFlyingUpDown();
+        RefreshSettingsLabels();
+    }
+
+    private void FindSettingsButtonsByText()
+    {
+        if (pauseMain == null)
             return;
 
-        Button template = pauseMain.GetComponentInChildren<Button>(true);
-        if (template == null)
-            return;
-
-        GameObject buttonObject = Instantiate(template.gameObject, template.transform.parent);
-        buttonObject.name = "InvertYawButton";
-
-        invertPitchButton = buttonObject.GetComponent<Button>();
-        invertPitchButton.onClick = new Button.ButtonClickedEvent();
-        invertYawButtonLabel = buttonObject.GetComponentInChildren<TMP_Text>(true);
-
-        RectTransform buttonTransform = buttonObject.GetComponent<RectTransform>();
-        float lowestButtonPosition = template.GetComponent<RectTransform>().anchoredPosition.y;
         foreach (Button button in pauseMain.GetComponentsInChildren<Button>(true))
-            lowestButtonPosition = Mathf.Min(lowestButtonPosition, button.GetComponent<RectTransform>().anchoredPosition.y);
+        {
+            TMP_Text label = button.GetComponentInChildren<TMP_Text>(true);
+            if (label == null)
+                continue;
 
-        buttonTransform.anchoredPosition = new Vector2(0f, lowestButtonPosition - 92f);
+            string buttonText = label.text.Trim();
+            if (buttonText.StartsWith("Invert Front/Back", System.StringComparison.OrdinalIgnoreCase)
+                || buttonText.StartsWith("Invert Yaw", System.StringComparison.OrdinalIgnoreCase))
+            {
+                invertFrontBackButton = button;
+                invertFrontBackLabel = label;
+            }
+            else if (buttonText.StartsWith("Invert Left/Right", System.StringComparison.OrdinalIgnoreCase))
+            {
+                invertLeftRightButton = button;
+                invertLeftRightLabel = label;
+            }
+            else if (buttonText.StartsWith("Invert Up/Down While Flying", System.StringComparison.OrdinalIgnoreCase))
+            {
+                invertFlyingUpDownButton = button;
+                invertFlyingUpDownLabel = label;
+            }
+        }
+    }
+
+    private void AddSettingsButtonListeners()
+    {
+        if (invertFrontBackButton != null)
+            invertFrontBackButton.onClick.AddListener(ToggleInvertFrontBackSetting);
+        if (invertLeftRightButton != null)
+            invertLeftRightButton.onClick.AddListener(ToggleInvertLeftRightSetting);
+        if (invertFlyingUpDownButton != null)
+            invertFlyingUpDownButton.onClick.AddListener(ToggleInvertFlyingUpDownSetting);
+    }
+
+    private void RefreshSettingsLabels()
+    {
+        GameSettings settings = GameSettings.Instance;
+
+        if (invertFrontBackLabel != null)
+            invertFrontBackLabel.text = "Invert Front/Back: " + OnOff(settings.InvertFrontBack);
+        if (invertLeftRightLabel != null)
+            invertLeftRightLabel.text = "Invert Left/Right: " + OnOff(settings.InvertLeftRight);
+        if (invertFlyingUpDownLabel != null)
+            invertFlyingUpDownLabel.text = "Invert Up/Down While Flying: " + OnOff(settings.InvertFlyingUpDown);
+    }
+
+    private static string OnOff(bool enabled)
+    {
+        return enabled ? "ON" : "OFF";
     }
 
 
