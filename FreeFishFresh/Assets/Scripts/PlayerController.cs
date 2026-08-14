@@ -318,7 +318,7 @@ public class PlayerController : MonoBehaviour
             //transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
             //no rudder
             transform.Rotate(trueYaw * invertFlyingPitch, -trueRudder, 0);
-
+            //turn rudder
             Quaternion targetRudderRotation = Quaternion.Euler(0f, 0f, trueRoll * rudderAngle);
             rudderTransform.localRotation = Quaternion.RotateTowards(
                 rudderTransform.localRotation,
