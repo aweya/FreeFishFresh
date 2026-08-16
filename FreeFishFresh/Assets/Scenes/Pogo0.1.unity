@@ -26,7 +26,7 @@ RenderSettings:
   m_AmbientIntensity: 1.2
   m_AmbientMode: 0
   m_SubtractiveShadowColor: {r: 0.3886792, g: 0.17820571, b: 0.17820571, a: 1}
-  m_SkyboxMaterial: {fileID: 2100000, guid: 8b7dd0809c7c6498789fa32a61eaa6cb, type: 2}
+  m_SkyboxMaterial: {fileID: 2100000, guid: c211851b320b05d4f82eb84054abecd7, type: 2}
   m_HaloStrength: 0.5
   m_FlareStrength: 1
   m_FlareFadeSpeed: 3
@@ -958,6 +958,22 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 30667791457382299, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30667791457382299, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30667791457382299, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 30667791457382299, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 662398945725299201, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
       propertyPath: waterPhysics
       value: 
@@ -970,6 +986,22 @@ PrefabInstance:
       propertyPath: playerController
       value: 
       objectReference: {fileID: 400799320}
+    - target: {fileID: 918764401163095181, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 918764401163095181, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
+      propertyPath: m_AnchorMin.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 918764401163095181, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 918764401163095181, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1024760693278815520, guid: 5c2d03f2fa71eaa42b7e5ed826954315, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
