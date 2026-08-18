@@ -2357,6 +2357,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: WaterCube
       objectReference: {fileID: 0}
+    - target: {fileID: 6720263806700228661, guid: 40d04c6c5687aac448c3c66064d27a3d, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3110,7 +3114,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 725804396391725484, guid: 35aa177c0f5b28747b10c97fc269ede2, type: 3}
+  - {fileID: 2100000, guid: 7502ba1aec10cc54c9a7b346855d20bb, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

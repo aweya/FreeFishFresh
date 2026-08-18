@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour
     public float speed;
 
     [Header("Control")]
+    public bool wingsDisabled = false;
     public Transform rotationPoint;
     public float rotationPointSpeed = 0.1f;
     public Transform originalRotationPoint;
@@ -211,9 +212,16 @@ public class PlayerController : MonoBehaviour
         rollInput = rollAction.ReadValue<float>();
         yawInput = yawAction.ReadValue<float>();
         rudderInput = rudderAction.ReadValue<float>();
-        wingInput = wingAction.ReadValue<float>();
         boostInput = boostAction.ReadValue<float>();
         springInput = springAction.ReadValue<float>();
+        if (!wingsDisabled)
+        {
+            wingInput = wingAction.ReadValue<float>();
+        }
+        else
+        {
+            wingInput = 0;
+        }
 
         if (resetAction.WasPressedThisFrame())
         {

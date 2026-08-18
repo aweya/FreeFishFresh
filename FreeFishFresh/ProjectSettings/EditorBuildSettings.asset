@@ -18,8 +18,17 @@ EditorBuildSettings:
     path: Assets/Scenes/Pogo Tutorial first Contact.unity
     guid: 6734dd985bd79054c9c4fd982dbb5cc4
   - enabled: 1
+    path: Assets/Scenes/Pogo0.5.unity
+    guid: c8b3be5d88cd7fc4e829488e1ebb9b20
+  - enabled: 1
     path: Assets/Scenes/Pogo1.unity
     guid: 47cf0a9b995313a42a1199d8fa0f50ac
+  - enabled: 1
+    path: Assets/Scenes/Flying Tutorial.unity
+    guid: b4581fcff3694204b8fb1fe73e476065
+  - enabled: 1
+    path: Assets/Scenes/Flying1.unity
+    guid: 366e864408d775846a22ef0032ab1133
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
   m_UseUCBPForAssetBundles: 0
