@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class TutorialTriger : MonoBehaviour
 {
+    public bool movableTutorial = false;
     public GameObject tutorialPanel;
     public bool triggerOnce = true;
 
@@ -17,6 +18,6 @@ public class TutorialTriger : MonoBehaviour
 
         triggered = true;
 
-        TutorialManager.Instance.ShowTutorial(tutorialPanel);
+        TutorialManager.Instance.ShowTutorial(tutorialPanel, movableTutorial);
     }
 }

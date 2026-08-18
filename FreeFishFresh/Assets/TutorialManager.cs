@@ -1,74 +1,151 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class TutorialManager : MonoBehaviour
 {
+    private const string GameplayMapName = "Fish";
+    private const string UiMapName = "UI";
+    private const string PreviewMapName = "TutPreview";
+
     public static TutorialManager Instance;
     public bool paused = false;
 
     public GameObject tutorialRoot;
     public PlayerController playerController;
 
+    public bool IsOpen => paused;
 
-    GameObject currentTutorial;
+    private GameObject currentTutorial;
+    private bool currentTutorialIsMovable;
 
-    void Awake()
+    private PlayerInput playerInput;
+    private InputActionMap previewMap;
+    private InputAction navigateAction;
+    private InputAction menuAction;
+    private bool navigateWasEnabled;
+    private bool menuWasEnabled;
+
+    private void Awake()
     {
         Instance = this;
-
         tutorialRoot.SetActive(false);
     }
 
-    public void TogglePause()
+    public void ShowTutorial(GameObject tutorial, bool movableTutorial)
     {
-        paused = !paused;
-
-        tutorialRoot.SetActive(paused);
+        if (tutorial == null)
+        {
+            Debug.LogError("Cannot show a tutorial without a tutorial panel.", this);
+            return;
+        }
 
         if (paused)
-        {
-            playerController.SetGamePaused(true);
+            CloseTutorial();
 
-            playerController.playerInput.SwitchCurrentActionMap("UI");
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
-        else
-        {
-            playerController.SetGamePaused(false);
+        CacheInputReferences();
 
-            playerController.playerInput.SwitchCurrentActionMap("Fish");
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
-        }
-    }
-
-    public void ShowTutorial(GameObject tutorial)
-    {
-        //tutorialRoot.SetActive(true);
-        TogglePause();
-        // Hide previous tutorial
-        if (currentTutorial != null)
-            currentTutorial.SetActive(false);
-
+        paused = true;
         currentTutorial = tutorial;
+        currentTutorialIsMovable = movableTutorial;
+
+        playerController.SetGamePaused(true);
+        playerInput.SwitchCurrentActionMap(UiMapName);
+
+        CaptureUiActionStates();
+
+        // Tutorials are modal, so the separate pause menu must not also open.
+        menuAction.Disable();
+
+        if (currentTutorialIsMovable)
+        {
+            // Directional controls operate the preview without moving UI focus.
+            navigateAction.Disable();
+            previewMap.Enable();
+        }
+
+        tutorialRoot.SetActive(true);
         currentTutorial.SetActive(true);
 
-        // Automatically find the Continue button
-        Button button = currentTutorial.GetComponentInChildren<Button>(true);
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
 
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(button.gameObject);
-
-
+        SelectContinueButton();
     }
 
     public void ContinueTutorial()
     {
-        currentTutorial.SetActive(false);
-        // tutorialRoot.SetActive(false);
+        CloseTutorial();
+    }
 
-        TogglePause();
+    private void CloseTutorial()
+    {
+        if (!paused)
+            return;
+
+        if (currentTutorial != null)
+            currentTutorial.SetActive(false);
+
+        if (previewMap != null)
+            previewMap.Disable();
+
+        RestoreActionState(navigateAction, navigateWasEnabled);
+        RestoreActionState(menuAction, menuWasEnabled);
+
+        tutorialRoot.SetActive(false);
+
+        playerController.SetGamePaused(false);
+        playerInput.SwitchCurrentActionMap(GameplayMapName);
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
+
+        currentTutorial = null;
+        currentTutorialIsMovable = false;
+        paused = false;
+    }
+
+    private void CacheInputReferences()
+    {
+        if (playerInput != null)
+            return;
+
+        playerInput = playerController.playerInput;
+        if (playerInput == null)
+            playerInput = playerController.GetComponent<PlayerInput>();
+
+        previewMap = playerInput.actions.FindActionMap(PreviewMapName, true);
+
+        InputActionMap uiMap = playerInput.actions.FindActionMap(UiMapName, true);
+        navigateAction = uiMap.FindAction("Navigate", true);
+        menuAction = uiMap.FindAction("Menu", true);
+    }
+
+    private void CaptureUiActionStates()
+    {
+        navigateWasEnabled = navigateAction.enabled;
+        menuWasEnabled = menuAction.enabled;
+    }
+
+    private static void RestoreActionState(InputAction action, bool shouldBeEnabled)
+    {
+        if (action == null)
+            return;
+
+        if (shouldBeEnabled)
+            action.Enable();
+        else
+            action.Disable();
+    }
+
+    private void SelectContinueButton()
+    {
+        Button button = currentTutorial.GetComponentInChildren<Button>(true);
+        if (button == null || EventSystem.current == null)
+            return;
+
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(button.gameObject);
     }
 }

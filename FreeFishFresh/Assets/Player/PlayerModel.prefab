@@ -783,6 +783,8 @@ MonoBehaviour:
   targetTimescale: 1
   gamePaused: 0
   invertPitch: 1
+  invertYaw: -1
+  invertFlyingPitch: 1
   rotSpeed: 3
   airDensity: 1.12
   area: 50.2
@@ -1050,7 +1052,7 @@ MonoBehaviour:
     m_RotationOrder: 4
   resetTime: 1
   springDamping: 0
-  pogoFriction: 19.1
+  pogoFriction: 25
   maxLeanGrip: 0.6
   springCompression: 0
   fullyCompressedSpringLength: 0.1
@@ -1065,7 +1067,6 @@ MonoBehaviour:
   boostForce: 2653
   bounceForceMultiplier: 4
   debugSpeed: 80
-  compression: 1
   rollInput: 0
   rudderInput: 0
   yawInput: 0
@@ -1083,8 +1084,6 @@ MonoBehaviour:
     m_SingletonActionBindings: []
     m_Flags: 0
   sideLiftDirection: {x: 0, y: 0, z: 0}
-  debugArrowScale: 0.1
-  arrowOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &1310635542792244622
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1368,8 +1367,6 @@ MonoBehaviour:
   pauseMainFirstButton: {fileID: 0}
   debugMenuFirstButton: {fileID: 0}
   checkpointMenuFirstButton: {fileID: 0}
-  invertPitchButton: {fileID: 0}
-  invertYawButtonLabel: {fileID: 0}
   checkpointContent: {fileID: 0}
   checkpointButtonPrefab: {fileID: 93441298451569241, guid: cec902296837a5d4a9e6ac5491640ab6, type: 3}
   levelCheckPoints: {fileID: 0}
