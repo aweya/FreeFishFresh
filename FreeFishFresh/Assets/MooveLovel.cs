@@ -5,6 +5,7 @@ public class MooveLovel : MonoBehaviour
 {
     public Transform level;
     public PlayerController playerController;
+    public Rigidbody playerRB;
     public bool wingsOpened;
     private float previousPlayerY;
 
@@ -17,11 +18,13 @@ public class MooveLovel : MonoBehaviour
     {
         if (!wingsOpened)
         {
-            MoveLevel();
+            // MoveLevel();
+            playerRB.useGravity = false;
         }
         if (playerController.wingInput > 0.7f)
         {
             wingsOpened = true;
+            playerRB.useGravity = true;
         }
     }
 
