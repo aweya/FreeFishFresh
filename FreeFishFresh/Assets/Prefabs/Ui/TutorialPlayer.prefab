@@ -1440,6 +1440,15 @@ MonoBehaviour:
   yaw: 0
   roll: 0
   rudder: 0
+  wingInput: 0
+  wingsExtended: 0
+  wingExtendedThreshold: 0.2
+  springInput: 0
+  springCompression: 0
+  originalRestLength: 1.1
+  minimumRestLength: 1
+  restLengthChangeSpeed: 1
+  restLength: 1.1
 --- !u!54 &5010423721628971903
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -11753,10 +11762,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6764360100070720753}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3acc1c41c9ed51742ae94bf56ac471fa, type: 3}
+  m_Script: {fileID: 11500000, guid: 4816d3b2b8f34fa9a0cb89ec3b33de45, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerController: {fileID: 0}
+  tutorialPlayer: {fileID: 6678222351767418751}
 --- !u!1 &6772314365802473687
 GameObject:
   m_ObjectHideFlags: 0
