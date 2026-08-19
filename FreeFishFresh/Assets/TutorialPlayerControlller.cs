@@ -15,9 +15,14 @@ public class TutorialPlayerControlller : MonoBehaviour
     public float rudder;
 
     [Header("Wings")]
+    public bool forceWingsExtended;
+    public GameObject forceWingsWhileActive;
     [Range(0f, 1f)] public float wingInput;
     public bool wingsExtended;
     [Range(0f, 1f)] public float wingExtendedThreshold = 0.2f;
+
+    [Header("Flying Preview")]
+    public Transform rudderTransform;
 
     [Header("Spring")]
     [Range(0f, 1f)] public float springInput;
@@ -51,28 +56,39 @@ public class TutorialPlayerControlller : MonoBehaviour
 
     void Update()
     {
-        yaw = yawAction.ReadValue<float>() * rotSpeed;
-        roll = rollAction.ReadValue<float>() * rotSpeed;
-        rudder = rudderAction.ReadValue<float>() * rotSpeed;
+        float yawInput = yawAction.ReadValue<float>();
+        float rollInput = rollAction.ReadValue<float>();
+        float rudderInput = rudderAction.ReadValue<float>();
 
-        wingInput = Mathf.Clamp01(wingAction.ReadValue<float>());
+        yaw = yawInput * rotSpeed;
+        roll = rollInput * rotSpeed;
+        rudder = rudderInput * rotSpeed;
+
+        float requestedWingInput = Mathf.Clamp01(wingAction.ReadValue<float>());
+        bool shouldForceWings = forceWingsExtended
+            || (forceWingsWhileActive != null && forceWingsWhileActive.activeInHierarchy);
+        wingInput = shouldForceWings ? 1f : requestedWingInput;
         wingsExtended = wingInput > wingExtendedThreshold;
 
         springInput = Mathf.Clamp01(springAction.ReadValue<float>());
         UpdateSpringLength();
 
-        // transform.Rotate(
-        //     yaw * playerController.invertPitch * Time.unscaledDeltaTime,
-        //     roll * playerController.invertYaw * Time.unscaledDeltaTime,
-        //     rudder * 2f * Time.unscaledDeltaTime);
         if (isFling)
         {
-            transform.Rotate(yaw * playerController.invertPitch * Time.unscaledDeltaTime, -roll * playerController.invertYaw * Time.unscaledDeltaTime, rudder * 2f * Time.unscaledDeltaTime);
+            ApplyFlyingControls(yaw * playerController.invertFlyingPitch, roll, rudder * 2f);
         }
         else
         {
             ApplyCameraRelativeRotation(yaw * playerController.invertPitch, roll * playerController.invertYaw, rudder * 2f);
         }
+    }
+
+    private void ApplyFlyingControls(float yaw, float roll, float rudder)
+    {
+
+        transform.Rotate(yaw * Time.unscaledDeltaTime, -rudder * Time.unscaledDeltaTime, roll * Time.unscaledDeltaTime);
+
+
     }
 
     private void UpdateSpringLength()

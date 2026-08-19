@@ -1440,9 +1440,12 @@ MonoBehaviour:
   yaw: 0
   roll: 0
   rudder: 0
+  forceWingsExtended: 0
+  forceWingsWhileActive: {fileID: 0}
   wingInput: 0
   wingsExtended: 0
   wingExtendedThreshold: 0.2
+  rudderTransform: {fileID: 6244099454693676763}
   springInput: 0
   springCompression: 0
   originalRestLength: 1.1
