@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3989029692766280169}
   - component: {fileID: 6612549883775250798}
   - component: {fileID: 5741196248880203354}
+  - component: {fileID: 7012345678901234567}
   m_Layer: 0
   m_Name: CheckpointSingleTrigger
   m_TagString: Untagged
@@ -50,7 +51,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1664626512483240330}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -124,6 +125,39 @@ MonoBehaviour:
   flag: {fileID: 6257788396349652013}
   CheckPointReset: {fileID: 3753077085695334211}
   level: {fileID: 0}
+--- !u!114 &7012345678901234567
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1664626512483240330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1651233ed6f730b4bb753b6254f29605, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  checkpointCollider: {fileID: 6612549883775250798}
+  DecoParent: {fileID: 1688965235683831419}
+  poleMaterial: {fileID: 2100000, guid: c81d0c6bc206f2d4bb1333f7c4127047, type: 2}
+  ropeMaterial: {fileID: 2100000, guid: cb5d6f033473b7c40b9a5c41ab326734, type: 2}
+  color1: {r: 0.93962264, g: 0.28897822, b: 0.68733203, a: 1}
+  color2: {r: 0.5568628, g: 0.9058824, b: 0.8862746, a: 1}
+  color3: {r: 0.9547169, g: 0.84824276, b: 0.24318251, a: 1}
+  color4: {r: 0.014934411, g: 0.014489126, b: 0.6981132, a: 1}
+  randomizeColors: 1
+  girlandePrefab: {fileID: 3837407523035477114, guid: 271b3ccda2ea59b40a086ac94e1d84a7, type: 3}
+  hangingVariants: []
+  randomizeObjects: 1
+  randomSeed: 12345
+  hangingScale: 2
+  hangingDistanceOffset: 0.02
+  hangingRotationOffset: {x: 0, y: 90, z: 180}
+  poleDiameter: 0.02
+  ropeWidth: 0.01
+  ropeSag: 0.13
+  ropeSegments: 16
+  hangingObjectSpacing: 4.3
 --- !u!1 &4966094950863692650
 GameObject:
   m_ObjectHideFlags: 0
@@ -316,6 +350,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FlagPole
       objectReference: {fileID: 0}
+    - target: {fileID: 7633696947950048742, guid: 941f749cae6d26848b60a1bb0ddb4cda, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 151.6819
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -346,3 +384,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83763997db846f242a1ef1bd30a3d014, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  activeColor: {r: 0.09698739, g: 0.5622641, b: 0.058348097, a: 1}

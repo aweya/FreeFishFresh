@@ -3,18 +3,16 @@ using UnityEngine;
 public class CheckPontSingle : MonoBehaviour
 {
     public FlagBehaviour flag;
-
-
     public Transform CheckPointReset;
 
     [HideInInspector]
     public LevelCheckPoints level;
 
+    private CheckPointDecoration decoration;
 
-    void Start()
+    private void Awake()
     {
-
-        // CheckPointReset = transform.Find("CheckPointReset");
+        decoration = GetComponent<CheckPointDecoration>();
     }
 
     void OnTriggerEnter(Collider other)
@@ -28,6 +26,13 @@ public class CheckPontSingle : MonoBehaviour
     public void Activate()
     {
         Debug.Log(name + " triggered");
+
+        if (flag == null)
+            return;
+
         flag.ChangeColor();
+
+        if (decoration != null)
+            decoration.SetRopeColor(flag.activeColor);
     }
 }

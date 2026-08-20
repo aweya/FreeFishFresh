@@ -2,15 +2,38 @@ using UnityEngine;
 
 public class FlagBehaviour : MonoBehaviour
 {
-    private Renderer rend;
+    private static readonly int BaseColorId = Shader.PropertyToID("_BaseColor");
+    private static readonly int ColorId = Shader.PropertyToID("_Color");
 
-    void Awake()
+    public Color activeColor = Color.green;
+
+    private Renderer[] renderers;
+
+    private void Awake()
     {
-        rend = GetComponent<Renderer>();
+        renderers = GetComponentsInChildren<Renderer>(true);
     }
 
     public void ChangeColor()
     {
-        rend.material.color = Color.green;
+        SetColor(activeColor);
+    }
+
+    public void SetColor(Color color)
+    {
+        if (renderers == null || renderers.Length == 0)
+            renderers = GetComponentsInChildren<Renderer>(true);
+
+        MaterialPropertyBlock properties = new MaterialPropertyBlock();
+
+        for (int i = 0; i < renderers.Length; i++)
+        {
+            Renderer renderer = renderers[i];
+            renderer.GetPropertyBlock(properties);
+            properties.SetColor(BaseColorId, color);
+            properties.SetColor(ColorId, color);
+            renderer.SetPropertyBlock(properties);
+            properties.Clear();
+        }
     }
 }
