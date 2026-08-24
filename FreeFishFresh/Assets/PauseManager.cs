@@ -89,8 +89,12 @@ public class PauseMenu : MonoBehaviour
 
         menu.SetActive(true);
 
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(firstButton);
+        if (EventSystem.current != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            if (firstButton != null)
+                EventSystem.current.SetSelectedGameObject(firstButton);
+        }
     }
 
     void BuildCheckpointButtons()
