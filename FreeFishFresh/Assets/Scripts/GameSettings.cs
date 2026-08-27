@@ -84,7 +84,7 @@ public class GameSettings : MonoBehaviour
         if (PlayerPrefs.HasKey(LegacyInvertPitchKey))
             return PlayerPrefs.GetInt(LegacyInvertPitchKey) != 1;
         if (PlayerPrefs.HasKey(LegacyInvertYawKey))
-            return PlayerPrefs.GetInt(LegacyInvertYawKey) != 1;
+            return PlayerPrefs.GetInt(LegacyInvertYawKey) == 1;
 
         return false;
     }

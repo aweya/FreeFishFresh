@@ -153,7 +153,8 @@ public class PlayerController : MonoBehaviour
         originalRotationPoint.position = rotationPoint.position;
         //define Inputs
         playerInput = GetComponent<PlayerInput>();
-        playerInput.SwitchCurrentActionMap("Fish");
+        if (playerInput.enabled)
+            playerInput.SwitchCurrentActionMap("Fish");
 
         rollAction = playerInput.actions["Roll"];
         yawAction = playerInput.actions["Yaw"];
@@ -325,7 +326,7 @@ public class PlayerController : MonoBehaviour
             //with rudder
             //transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
             //no rudder
-            transform.Rotate(trueYaw * invertFlyingPitch, -trueRudder, 0);
+            transform.Rotate(trueYaw * invertFlyingPitch, -trueRudder * invertYaw, 0);
             //turn rudder
             Quaternion targetRudderRotation = Quaternion.Euler(0f, 0f, trueRoll * rudderAngle);
             rudderTransform.localRotation = Quaternion.RotateTowards(
@@ -338,7 +339,7 @@ public class PlayerController : MonoBehaviour
         else
         {
             //pogo controll
-            ApplyCameraRelativeRotation(trueYaw * invertPitch, trueRoll * invertYaw, trueRudder * 2);
+            ApplyCameraRelativeRotation(trueYaw * invertPitch, trueRoll, trueRudder * 2 * invertYaw);
 
         }
 
@@ -493,10 +494,16 @@ public class PlayerController : MonoBehaviour
                 float springLenght = hit.distance;
                 currentSpringLength = springLenght;
                 Vector3 springDirection = transform.up;
+                Rigidbody hitBody = hit.rigidbody;
+                bool canPushHitBody = hitBody != null && hitBody != rb && !hitBody.isKinematic;
                 //calc Spring offset
                 float offset = restLenght - springLenght;
                 //calc delta (spring velocity)
-                float springVelocity = Vector3.Dot(springDirection, rb.GetPointVelocity(rayPos.position));
+                Vector3 hitPointVelocity = canPushHitBody
+                    ? hitBody.GetPointVelocity(hit.point)
+                    : Vector3.zero;
+                Vector3 relativePointVelocity = rb.GetPointVelocity(rayPos.position) - hitPointVelocity;
+                float springVelocity = Vector3.Dot(springDirection, relativePointVelocity);
                 //make spring nonlinear
                 float nonlinearfactor = springScaleCurve.Evaluate(springCompression);
                 //calc springForce
@@ -526,12 +533,15 @@ public class PlayerController : MonoBehaviour
                 // try adding proprotional stregnt to angle
 
                 //apply SupensionForces
-                rb.AddForceAtPosition(transform.up * springForce, rayPos.position + transform.up * 1, ForceMode.Force);
+                Vector3 suspensionForce = transform.up * springForce;
+                rb.AddForceAtPosition(suspensionForce, rayPos.position + transform.up * 1, ForceMode.Force);
+                if (canPushHitBody)
+                    hitBody.AddForceAtPosition(-suspensionForce, hit.point, ForceMode.Force);
                 Debug.DrawRay(hit.point, forceDirection * 3, Color.blue);
 
                 // Add friction to pogo
 
-                Vector3 pogoVel = rb.GetPointVelocity(hit.point);
+                Vector3 pogoVel = rb.GetPointVelocity(hit.point) - hitPointVelocity;
 
 
                 float xSpeed = Vector3.Dot(pogoVel, rayPos.right);
@@ -549,6 +559,8 @@ public class PlayerController : MonoBehaviour
 
                 // apply Frictionforces
                 rb.AddForceAtPosition(frictionForce, hit.point, ForceMode.Force);
+                if (canPushHitBody)
+                    hitBody.AddForceAtPosition(-frictionForce, hit.point, ForceMode.Force);
                 Debug.DrawRay(hit.point, frictionForce / 10f, Color.gray);
 
                 // move tip

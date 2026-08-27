@@ -40,6 +40,14 @@ public class PauseMenu : MonoBehaviour
 
     void Awake()
     {
+        // The main-menu display player uses the gameplay prefab without a pause UI.
+        // Do not initialize this component when its required gameplay references are absent.
+        if (pauseMenuRoot == null || pauseMain == null || playercontroller == null)
+        {
+            enabled = false;
+            return;
+        }
+
         Cursor.visible = true;
         pauseMenuRoot.SetActive(paused);
 

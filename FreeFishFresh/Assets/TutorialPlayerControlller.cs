@@ -75,11 +75,17 @@ public class TutorialPlayerControlller : MonoBehaviour
 
         if (isFling)
         {
-            ApplyFlyingControls(yaw * playerController.invertFlyingPitch, roll, rudder * 2f);
+            ApplyFlyingControls(
+                yaw * playerController.invertFlyingPitch,
+                roll,
+                rudder * 2f * playerController.invertYaw);
         }
         else
         {
-            ApplyCameraRelativeRotation(yaw * playerController.invertPitch, roll * playerController.invertYaw, rudder * 2f);
+            ApplyCameraRelativeRotation(
+                yaw * playerController.invertPitch,
+                roll,
+                rudder * 2f * playerController.invertYaw);
         }
     }
 
