@@ -11,6 +11,7 @@ public class PlayerController : MonoBehaviour
     [Header("misc")]
     public Transform cameraTransform;
     public Transform resetPoint;
+    public UvulaHit uvulaHit;
 
 
     [Min(0f)] public float resetPenalty = 5f;
@@ -483,11 +484,13 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics.Raycast(rayPos.position, -transform.up, out RaycastHit hit, restLenght))
         {
-
-
             if (hit.collider.isTrigger == false)
             {
-
+                if (hit.collider.CompareTag("Uvula"))
+                {
+                    if (uvulaHit != null)
+                        uvulaHit.UvulaStrike();
+                }
                 //----Suspension----
                 isTipGrounded = true;
                 //calc srinng lenght
