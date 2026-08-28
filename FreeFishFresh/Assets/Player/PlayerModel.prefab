@@ -750,8 +750,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraTransform: {fileID: 0}
   resetPoint: {fileID: 0}
+  uvulaHit: {fileID: 0}
   resetPenalty: 5
   speed: 0
+  wingsDisabled: 0
   rotationPoint: {fileID: 8104574092997094134}
   rotationPointSpeed: 0.1
   originalRotationPoint: {fileID: 5871821489772884675}
@@ -785,11 +787,11 @@ MonoBehaviour:
   invertPitch: 1
   invertYaw: -1
   invertFlyingPitch: 1
-  rotSpeed: 3
+  rotSpeed: 2
   airDensity: 1.12
   area: 50.2
-  rudderArea: 9.22
-  bodyArea: 9.16
+  rudderArea: 16.16
+  bodyArea: 14.3
   dragModifier: 0.67
   liftCurve:
     serializedVersion: 2
@@ -1003,7 +1005,7 @@ MonoBehaviour:
   playerInput: {fileID: 3606583397542080988}
   rudderStabalisation: 0.4
   pitchStabalisation: 0
-  maxControlSpeed: 30
+  maxControlSpeed: 10
   springScaleCurve:
     serializedVersion: 2
     m_Curve:

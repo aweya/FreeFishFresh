@@ -64,10 +64,18 @@ PrefabInstance:
       propertyPath: m_ConstrainProportionsScale
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 490939697822461851, guid: 0d8f8ca36fd95984cae89ffa3e0c5ad6, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 28d960bfb24280d4a839a20e2d7ff36a, type: 2}
     - target: {fileID: 919132149155446097, guid: 0d8f8ca36fd95984cae89ffa3e0c5ad6, type: 3}
       propertyPath: m_Name
       value: hook (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8043399194227156538, guid: 0d8f8ca36fd95984cae89ffa3e0c5ad6, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 6d2b23d7a5d359a45ae463acaeaa3032, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -119,4 +127,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerController: {fileID: 0}
   pullTime: 4
-  distance: 20
+  distance: 40

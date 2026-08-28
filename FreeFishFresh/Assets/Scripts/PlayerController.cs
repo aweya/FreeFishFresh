@@ -315,7 +315,7 @@ public class PlayerController : MonoBehaviour
         }
 
         float trueYaw = (yawInput * rotSpeed) * wingInfuelce;
-        float trueRoll = (rollInput * rotSpeed / 2.5f) * wingInfuelce * (1.5f - wingInput);
+        float trueRoll = (rollInput * rotSpeed / 2.5f) * wingInfuelce;
         float trueRudder = (rudderInput * rotSpeed / 1.5f) * wingInfuelce;
 
 
@@ -327,7 +327,7 @@ public class PlayerController : MonoBehaviour
             //with rudder
             //transform.Rotate(trueYaw * invertYaw, -trueRudder, -trueRoll);
             //no rudder
-            transform.Rotate(trueYaw * invertFlyingPitch, -trueRudder * invertYaw, 0);
+            transform.Rotate(trueYaw * invertFlyingPitch, -trueRudder * 2, 0);
             //turn rudder
             Quaternion targetRudderRotation = Quaternion.Euler(0f, 0f, trueRoll * rudderAngle);
             rudderTransform.localRotation = Quaternion.RotateTowards(

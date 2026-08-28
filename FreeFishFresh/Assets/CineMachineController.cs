@@ -13,6 +13,7 @@ public class CineMachineController : MonoBehaviour
     public float BaseFov = 90f;
     public float FovMultilier;
     public float maxFov = 100f;
+    public float wingTreshHold = 0.5f;
     private CinemachineOrbitalFollow glideOrbit;
     private CinemachineOrbitalFollow pogoOrbit;
     private PlayerController player;
@@ -30,9 +31,17 @@ public class CineMachineController : MonoBehaviour
     void Update()
     {
         //--switch caemera
+        if (player.wingInput > wingTreshHold)
+        {
+            glideCam.Priority = 11;
+        }
+        else
+        {
+            glideCam.Priority = 5;
+        }
 
-        int wingOpenAmount = Mathf.RoundToInt(player.wingInput) * 10;
-        glideCam.Priority = wingOpenAmount;
+        /*   int wingOpenAmount = Mathf.RoundToInt(player.wingInput) * 10;
+          glideCam.Priority = wingOpenAmount; */
 
         // channge Fov with speed
         float clampSpeed = Mathf.Clamp(player.speed, 1f, 10000f);
