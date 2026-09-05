@@ -1,0 +1,5 @@
+{72650d35-bde3-4c42-9473-f2bd17102abd} bank:/Master
+{ea782de1-cc98-0000-123a-7843e6e32c25} bank:/Master.strings
+{2f42b665-1340-4174-8a7a-a1631fb6328b} bus:/
+{00f0abf0-d9b3-497d-85ed-bbf87fb3b22a} bus:/Reverb
+{7b1368e5-0a64-4b6d-a378-5f39145fc714} event:/New Event
