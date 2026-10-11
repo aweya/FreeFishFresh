@@ -5,9 +5,15 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using FMODUnity;
 
 public class PlayerController : MonoBehaviour
 {
+
+    [SerializeField] private EventReference fishBounce;
+    private FMOD.Studio.EventInstance springSound;
+    
+
     [Header("misc")]
     public Transform cameraTransform;
     public Transform resetPoint;
@@ -141,8 +147,20 @@ public class PlayerController : MonoBehaviour
         {
             Debug.LogError("Wings object not found!");
         }
+        springSound = RuntimeManager.CreateInstance(fishBounce);
+        springSound.set3DAttributes(
+        RuntimeUtils.To3DAttributes(transform.position));
+        springSound.setParameterByName("SpringCompression", 0f);
+        springSound.start();
     }
-
+    private void OnDestroy()
+    {
+        if (springSound.isValid())
+        {
+            springSound.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            springSound.release();
+        }
+    }
     private void Awake()
     {
         defaultFrontBackDirection = DirectionSign(invertPitch, -1);
@@ -484,6 +502,7 @@ public class PlayerController : MonoBehaviour
     {
         if (Physics.Raycast(rayPos.position, -transform.up, out RaycastHit hit, restLenght))
         {
+            
             if (hit.collider.isTrigger == false)
             {
                 if (hit.collider.CompareTag("Uvula"))
@@ -492,6 +511,12 @@ public class PlayerController : MonoBehaviour
                         uvulaHit.UvulaStrike();
                 }
                 //----Suspension----
+                // Play once when transitioning from airborne to grounded.
+                if (!isTipGrounded)
+                {
+                    RuntimeManager.PlayOneShot(fishBounce, hit.point);
+                }
+
                 isTipGrounded = true;
                 //calc srinng lenght
                 float springLenght = hit.distance;
@@ -568,6 +593,7 @@ public class PlayerController : MonoBehaviour
 
                 // move tip
                 pogoTip.transform.position = hit.point;
+                
             }
         }
         else
@@ -583,14 +609,21 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateSpringCompression()
     {
-        // Uses the actual spring length. Player pull-in changes that length slightly,
-        // but only a real physical bottom-out reaches 1.
         springCompression = Mathf.InverseLerp(
             originalrestlenght,
             fullyCompressedSpringLength,
             currentSpringLength);
-    }
 
+        if (springSound.isValid())
+        {
+            springSound.set3DAttributes(
+                RuntimeUtils.To3DAttributes(pogoTip.position));
+
+            springSound.setParameterByName(
+                "SpringCompression",
+                isTipGrounded ? springCompression : 0f);
+        }
+    }
 
     private void Boost()
     {

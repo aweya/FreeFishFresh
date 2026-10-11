@@ -379,9 +379,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   switchSettingsMigration: 1
   HasSourceProject: 0
-  HasPlatforms: 1
+  HasPlatforms: 0
   sourceProjectPath: ../../../freefish PRODUCTION/freefishfmodproject/freefishfmodproject.fspro
-  sourceBankPath: C:\gamevisuals4\FreeFishFresh\FreeFishFresh\Assets\FMODBanks
+  sourceBankPath: Assets/FMODBanks/Desktop
   sourceBankPathUnformatted: 
   BankRefreshCooldown: 5
   ShowBankRefreshWindow: 1
@@ -405,7 +405,12 @@ MonoBehaviour:
   Plugins: []
   MasterBanks:
   - Master
-  Banks: []
+  Banks:
+  - Master.assets
+  - Master.streams
+  - SFX
+  - SFX.assets
+  - SFX.streams
   BanksToLoad: []
   LiveUpdatePort: 9264
   EnableMemoryTracking: 0
@@ -417,22 +422,22 @@ MonoBehaviour:
   EnableErrorCallback: 0
   SharedLibraryUpdateStage: 0
   SharedLibraryTimeSinceStart: 0
-  CurrentVersion: 131860
-  HideSetupWizard: 0
+  CurrentVersion: 131861
+  HideSetupWizard: 1
   LastEventReferenceScanVersion: 131860
   Platforms:
-  - {fileID: -486300167866723872}
-  - {fileID: 4380397874513883239}
-  - {fileID: 379847279801138840}
-  - {fileID: 3145920495523210625}
-  - {fileID: 1003777224232205464}
-  - {fileID: 6594704415839338858}
-  - {fileID: -6472987838059853786}
-  - {fileID: 2631581606390457863}
   - {fileID: -7585585161522730144}
-  - {fileID: -3248015186545914756}
+  - {fileID: -6472987838059853786}
   - {fileID: -5458190765328685045}
+  - {fileID: -3248015186545914756}
+  - {fileID: -486300167866723872}
+  - {fileID: 379847279801138840}
+  - {fileID: 1003777224232205464}
+  - {fileID: 2631581606390457863}
+  - {fileID: 3145920495523210625}
+  - {fileID: 4380397874513883239}
   - {fileID: 5583766235288997730}
+  - {fileID: 6594704415839338858}
   MigratedPlatforms: 0a00000000000000150000000b00000009000000050000001200000008000000060000000c0000000200000001000000
 --- !u!114 &379847279801138840
 MonoBehaviour:
@@ -796,16 +801,16 @@ MonoBehaviour:
     HasValue: 0
   displaySortOrder: 0
   childIdentifiers:
-  - 2fea114e74ecf3c4f920e1d5cc1c4c40
-  - c88d16e5272a4e241b0ef0ac2e53b73d
-  - 2c5177b11d81d824dbb064f9ac8527da
-  - e7a046c753c3c3d4aacc91f6597f310d
-  - fd7c55dab0fce234b8c25f6ffca523c1
-  - 52eb9df5db46521439908db3a29a1bbb
   - 0f8eb3f400726694eb47beb1a9f94ce8
-  - 46fbfdf3fc43db0458918377fd40293e
+  - fd7c55dab0fce234b8c25f6ffca523c1
   - de700ef3f37a49b58a57ae3addf01ad9
+  - 46fbfdf3fc43db0458918377fd40293e
+  - 2fea114e74ecf3c4f920e1d5cc1c4c40
+  - 2c5177b11d81d824dbb064f9ac8527da
+  - 52eb9df5db46521439908db3a29a1bbb
+  - c88d16e5272a4e241b0ef0ac2e53b73d
   - b7716510a1f36934c87976f3a81dbf3d
+  - e7a046c753c3c3d4aacc91f6597f310d
   codecChannels:
     Value: []
     HasValue: 0
