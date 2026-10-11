@@ -333,7 +333,7 @@ Transform:
   m_GameObject: {fileID: 126172694}
   serializedVersion: 2
   m_LocalRotation: {x: 0.9185968, y: 0.00000006935213, z: 0.3951961, w: 0.000000029836475}
-  m_LocalPosition: {x: 135.3, y: 81.9, z: 643.4}
+  m_LocalPosition: {x: 135.3, y: 73.58, z: 643.4}
   m_LocalScale: {x: 7.165771, y: 7.165771, z: 7.165771}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -8571,6 +8571,7 @@ GameObject:
   - component: {fileID: 1530500851369213849}
   - component: {fileID: 1882639842379224510}
   - component: {fileID: 625490784223981091}
+  - component: {fileID: 1882639842379224511}
   m_Layer: 0
   m_Name: Cube.008
   m_TagString: Untagged
@@ -8780,6 +8781,28 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 413434316915947222}
+  m_Mesh: {fileID: 8552134717624371188, guid: 35aa177c0f5b28747b10c97fc269ede2, type: 3}
+--- !u!64 &1882639842379224511
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 413434316915947222}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 1
+  m_Enabled: 1
+  serializedVersion: 5
+  m_Convex: 0
+  m_CookingOptions: 30
   m_Mesh: {fileID: 8552134717624371188, guid: 35aa177c0f5b28747b10c97fc269ede2, type: 3}
 --- !u!1 &2108552569803993492
 GameObject:
