@@ -15,7 +15,7 @@ MonoBehaviour:
   Path: Assets/FMODBanks/Desktop/SFX.streams.bank
   Name: SFX.streams
   StudioPath: bank:/SFX.streams
-  lastModified: 639273453749346570
+  lastModified: 639274296213138750
   FileSizes: []
   Exists: 1
 --- !u!114 &-7883850885420952394
@@ -33,7 +33,7 @@ MonoBehaviour:
   Path: Assets/FMODBanks/Desktop/SFX.bank
   Name: SFX
   StudioPath: bank:/SFX
-  lastModified: 639273453749036328
+  lastModified: 639274296212744719
   FileSizes: []
   Exists: 1
 --- !u!114 &-7547294671122671569
@@ -51,10 +51,10 @@ MonoBehaviour:
   Path: Assets/FMODBanks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639273419319447786
+  lastModified: 639274118829087127
   FileSizes:
   - Name: 
-    Value: 1072
+    Value: 1122
   Exists: 1
 --- !u!114 &-6226233373147773956
 MonoBehaviour:
@@ -95,7 +95,7 @@ MonoBehaviour:
   Path: Assets/FMODBanks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639273419319356153
+  lastModified: 639274118829042066
   FileSizes: []
   Exists: 1
 --- !u!114 &-672951787252086911
@@ -113,7 +113,7 @@ MonoBehaviour:
   Path: Assets/FMODBanks/Desktop/SFX.assets.bank
   Name: SFX.assets
   StudioPath: bank:/SFX.assets
-  lastModified: 639273453749316283
+  lastModified: 639274296213113247
   FileSizes: []
   Exists: 1
 --- !u!114 &11400000
@@ -138,16 +138,19 @@ MonoBehaviour:
   - {fileID: -8006407336800888741}
   EditorEvents:
   - {fileID: 3450590518640983933}
+  - {fileID: 3438735645877158896}
   EditorParameters: []
   MasterBanks:
   - {fileID: -5158886893943622985}
   StringsBanks:
   - {fileID: -7547294671122671569}
   cacheVersion: 131861
-  cacheTime: 639273453749346570
+  cacheTime: 639274296213138750
   SerializableEventsDict:
   - key: event:/FishBounce
     index: 0
+  - key: event:/OpenWing
+    index: 1
 --- !u!114 &2702752132009034346
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -163,9 +166,36 @@ MonoBehaviour:
   Path: Assets/FMODBanks/Desktop/Master.streams.bank
   Name: Master.streams
   StudioPath: bank:/Master.streams
-  lastModified: 639273419319437777
+  lastModified: 639274118829072138
   FileSizes: []
   Exists: 1
+--- !u!114 &3438735645877158896
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/OpenWing
+  m_EditorClassIdentifier: 
+  Path: event:/OpenWing
+  Guid:
+    Data1: -427997413
+    Data2: 1182063355
+    Data3: -778038143
+    Data4: -1284736270
+  Banks:
+  - {fileID: -7883850885420952394}
+  IsStream: 0
+  Is3D: 1
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 0
 --- !u!114 &3450590518640983933
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,6 +239,6 @@ MonoBehaviour:
   Path: Assets/FMODBanks/Desktop/Master.assets.bank
   Name: Master.assets
   StudioPath: bank:/Master.assets
-  lastModified: 639273419319387345
+  lastModified: 639274118829052070
   FileSizes: []
   Exists: 1

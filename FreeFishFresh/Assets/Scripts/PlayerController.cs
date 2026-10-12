@@ -11,8 +11,9 @@ public class PlayerController : MonoBehaviour
 {
 
     [SerializeField] private EventReference fishBounce;
+    [SerializeField] private EventReference fishOpenWings;
+    private bool wingOpened;
     private FMOD.Studio.EventInstance springSound;
-    
 
     [Header("misc")]
     public Transform cameraTransform;
@@ -151,7 +152,8 @@ public class PlayerController : MonoBehaviour
         springSound.set3DAttributes(
         RuntimeUtils.To3DAttributes(transform.position));
         springSound.setParameterByName("SpringCompression", 0f);
-        springSound.start();
+        
+        
     }
     private void OnDestroy()
     {
@@ -234,17 +236,25 @@ public class PlayerController : MonoBehaviour
         rudderInput = rudderAction.ReadValue<float>();
         boostInput = boostAction.ReadValue<float>();
         springInput = springAction.ReadValue<float>();
-        if (!wingsDisabled)
+        // Read wing input, or force closed when wings are disabled.
+        wingInput = wingsDisabled ? 0f : wingAction.ReadValue<float>();
+
+        // Opening: play once.
+        if (!wingOpened && wingInput > 0.2f)
         {
-            wingInput = wingAction.ReadValue<float>();
+            wingOpened = true;
+            RuntimeManager.PlayOneShot(fishOpenWings, transform.position);
         }
-        else
+        // Closing: play once.
+        else if (wingOpened && wingInput < 0.1f)
         {
-            wingInput = 0;
+            wingOpened = false;
+            RuntimeManager.PlayOneShot(fishOpenWings, transform.position);
         }
 
         if (resetAction.WasPressedThisFrame())
         {
+            
             ResetGlider();
         }
 
@@ -323,6 +333,7 @@ public class PlayerController : MonoBehaviour
         float wingInfuelce;
         if (wingInput > 0.2)
         {
+            
             float clampedSpeed = Mathf.Min(speed, maxControlSpeed);
             wingInfuelce = (1.2f - wingInput) * (1 + clampedSpeed / 10f);
         }
@@ -514,7 +525,7 @@ public class PlayerController : MonoBehaviour
                 // Play once when transitioning from airborne to grounded.
                 if (!isTipGrounded)
                 {
-                    RuntimeManager.PlayOneShot(fishBounce, hit.point);
+                    RuntimeManager.PlayOneShot(fishBounce, this.transform.position);
                 }
 
                 isTipGrounded = true;

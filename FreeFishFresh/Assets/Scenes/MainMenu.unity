@@ -14511,6 +14511,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6392395111256146963, guid: c451d9441341b634c945f72e2f9d0c92, type: 3}
+      propertyPath: fishBounce.Path
+      value: event:/FishBounce
+      objectReference: {fileID: 0}
+    - target: {fileID: 6392395111256146963, guid: c451d9441341b634c945f72e2f9d0c92, type: 3}
+      propertyPath: fishBounce.Guid.Data1
+      value: -1577343409
+      objectReference: {fileID: 0}
+    - target: {fileID: 6392395111256146963, guid: c451d9441341b634c945f72e2f9d0c92, type: 3}
+      propertyPath: fishBounce.Guid.Data2
+      value: 1133884462
+      objectReference: {fileID: 0}
+    - target: {fileID: 6392395111256146963, guid: c451d9441341b634c945f72e2f9d0c92, type: 3}
+      propertyPath: fishBounce.Guid.Data3
+      value: 629683857
+      objectReference: {fileID: 0}
+    - target: {fileID: 6392395111256146963, guid: c451d9441341b634c945f72e2f9d0c92, type: 3}
+      propertyPath: fishBounce.Guid.Data4
+      value: -2142142918
+      objectReference: {fileID: 0}
     - target: {fileID: 7955435366239520635, guid: c451d9441341b634c945f72e2f9d0c92, type: 3}
       propertyPath: m_Enabled
       value: 0

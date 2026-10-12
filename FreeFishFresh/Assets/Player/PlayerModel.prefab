@@ -748,6 +748,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ae0a46d3103244dbf08b2a8da65683, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  fishBounce:
+    Guid:
+      Data1: -1577343409
+      Data2: 1133884462
+      Data3: 629683857
+      Data4: -2142142918
+    Path: event:/FishBounce
   cameraTransform: {fileID: 0}
   resetPoint: {fileID: 0}
   uvulaHit: {fileID: 0}
@@ -1184,6 +1191,7 @@ MonoBehaviour:
   BaseFov: 90
   FovMultilier: 0.01
   maxFov: 122.5
+  wingTreshHold: 0.5
 --- !u!54 &1609565075682932285
 Rigidbody:
   m_ObjectHideFlags: 0
